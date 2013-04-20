@@ -5,7 +5,7 @@
 (org-remember-insinuate)
 
 (set-face-foreground 'org-hide (face-background 'default))
-(setq org-directory (concat emacs-config-dir "/jerry/org")
+(setq org-directory "~/Ubuntu One/org"
       org-agenda-files (list (concat org-directory "/gtd.org")
 			     (concat org-directory "/notes.org"))
       org-completion-use-ido t

@@ -15,7 +15,6 @@
       evil-cross-lines t)
 (require 'goto-chg)
 (require 'evil)
-(require 'evil-paredit)
 
 (defun config-evil-key-bindings nil
   "Define my own key binding in Evil"
@@ -56,7 +55,6 @@
 
 (require 'evil-tab-minor-mode)
 (evil-tab-global-mode t)
-(add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
 
 (provide 'config-evil)
 

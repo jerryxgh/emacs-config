@@ -22,6 +22,7 @@
       ;;ecb-create-layout-frame-width 110
       )
 (add-to-list 'ecb-compilation-buffer-names '("*info*"))
+(add-to-list 'ecb-source-path  '("~/Git Repositories/Workspaces" "/root"))
 
 (add-hook 'ecb-show-ecb-windows-before-hook
           'ecb-enlarge-frame-width-before-show)

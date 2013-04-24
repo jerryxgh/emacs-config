@@ -79,9 +79,7 @@
 (require 'config-evil) ;Emacs的vim模拟
 (require 'config-org) ;记笔记工具org
 (require 'config-programming) ;编程方面的设置
-;;(require 'config-extra)
-(require 'config-desktop)
-                                        ;必须放在初始化文件的最后，记录上次关闭时打开的文件、buffer、变量等
-
+(require 'config-extra) ;平时用的比较少的插件
+(require 'config-desktop) ;必须放在初始化文件的最后，记录上次关闭时打开的文件、buffer、变量等
 
 ;;; init.el ends here

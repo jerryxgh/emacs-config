@@ -20,8 +20,14 @@
   "A list contains major mode name, in these modes yasnippet will be turn on by major mode hook.")
 ;; 要仔细设置 yas-dont-activate 这个变量，否则 yas-minor-mode 不能启动
 (setq-default yas-dont-activate (add-to-list 'yas-dont-activate
-                                             '(lambda ()
-                                                buffer-read-only)))
+                                             (lambda ()
+                                               (or buffer-read-only
+                                                   (memq major-mode
+                                                         (list 'gdb-mode
+                                                               'eshell-mode
+                                                               'inferior-scheme-mode
+                                                               'shell-mode
+                                                               'sql-interactive-mode))))))
 
 
 (add-hook 'js2-mode-hook '(lambda ()

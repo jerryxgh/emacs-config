@@ -1,5 +1,5 @@
 ;;; config-base.el --- 一些基本的设置，这些设置会改变 Emacs 的外观或者对大部分模式起作用
-;; Time-stamp: <2013-03-26 23:31:09 Jerry Xu>
+;; Time-stamp: <2013-04-24 21:09:52 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -208,6 +208,7 @@ the empty string."
 (global-set-key (kbd "C-<") 'shrink-window)
 (global-set-key (kbd "C->") 'enlarge-window)
 (define-key global-map (kbd "<f8>") 'goto-previous-buffer)
+(define-key global-map (kbd "C-x C-z") 'goto-previous-buffer)
 (define-key global-map (kbd "<f7>") 'toggle-eshell-buffer)
 (define-key lisp-interaction-mode-map (kbd "C-x k") 'clear-scratch-buffer)
 (global-set-key (kbd "C-x j") '(lambda () (interactive)

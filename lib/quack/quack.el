@@ -2000,49 +2000,6 @@ For PLT-style when `quack-pltish-fontify-keywords-p' is non-nil."
           (newline))
         (lisp-indent-line)))))
 
-;; Agreeing-Paren Insert:
-
-;; TODO: Make paren-matching within comments limit seaching to within comments,
-;;       not skip back and try to match code.  One workaround is to prefix
-;;       parents/brackets in comments with backslash.
-
-(defun quack-insert-closing (prefix default-close other-open other-close)
-  (insert default-close)
-  (unless prefix
-    (let ((open-pt (condition-case nil
-                       (scan-sexps (point) -1)
-                     (error (beep) nil))))
-      (when open-pt
-        (let ((open-char (aref (buffer-substring-no-properties
-                                open-pt (1+ open-pt))
-                               0)))
-          (when (= open-char other-open)
-            (delete-backward-char 1)
-            (insert other-close))))))
-  (when blink-paren-function (funcall blink-paren-function)))
-
-(defun quack-insert-closing-paren (&optional prefix)
-  (interactive "P")
-  (quack-insert-closing prefix ?\) ?\[ ?\]))
-
-(defun quack-insert-closing-bracket (&optional prefix)
-  (interactive "P")
-  (quack-insert-closing prefix ?\] ?\( ?\)))
-
-;; Opening-Paren Insert:
-
-(defun quack-insert-opening (prefix char)
-  (insert (if (or prefix (not quack-smart-open-paren-p)) char ?\())
-  (when blink-paren-function (funcall blink-paren-function)))
-
-(defun quack-insert-opening-paren (&optional prefix)
-  (interactive "P")
-  (quack-insert-opening prefix ?\())
-
-(defun quack-insert-opening-bracket (&optional prefix)
-  (interactive "P")
-  (quack-insert-opening prefix ?\[))
-
 ;; Definition Lambda Syntax Toggling:
 
 (defconst quack-toggle-lambda-re-1
@@ -4096,13 +4053,6 @@ Can be used in your `~/.emacs' file something like this:
      (add-submenu nil quack-scheme-mode-menuspec)
      (set-menubar-dirty-flag)
      (setq mode-popup-menu quack-scheme-mode-menuspec)))
-
-  ;; Bind the paren-matching keys.
-  (local-set-key ")" 'quack-insert-closing-paren)
-  (local-set-key "]" 'quack-insert-closing-bracket)
-
-  (local-set-key "(" 'quack-insert-opening-paren)
-  (local-set-key "[" 'quack-insert-opening-bracket)
 
   ;; Steal any find-file bindings.
   (when quack-remap-find-file-bindings-p

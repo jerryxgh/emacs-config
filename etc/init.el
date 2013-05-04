@@ -2,4 +2,4 @@
 ;;; Guanghui Xu's init.el file
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(load "~/Ubuntu One/emacs-config/jerry/jerry.el")
+(load "~/Git Repositories/emacs-config/init.el")

@@ -33,13 +33,13 @@
 (provide 'config-extra)
 ;;; quack --- for scheme
 (setq quack-dir "~/.emacs.d/auto-save-list/.quack"
+      quack-fontify-style nil
       quack-global-menu-p nil
       quack-default-program "guile")
 (require 'quack)
 (add-hook 'inferior-scheme-mode-hook 'interactive-shell-on-exit-kill-buffer)
 (define-key scheme-mode-map (kbd "C-x C-z") 'switch-to-scheme)
 
-(require 'config-nxhtml) ;写html jsp php等的工具
-
+;;(require 'config-nxhtml) ;写html jsp php等的工具
 
 ;;; config-extra.el ends here

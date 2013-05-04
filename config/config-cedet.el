@@ -36,7 +36,7 @@
                                         ;      srecode-map-save-file (concat emacs-config-dir "/config/srecode/srecode-map")) ;SRecode模板文件的映射文件路径，全局变量
 (setq semantic-default-submodes '(global-semanticdb-minor-mode
                                   global-semantic-idle-scheduler-mode
-                                  global-semantic-idle-summary-mode
+                                  ;;global-semantic-idle-summary-mode
                                   global-semantic-decoration-mode
                                   global-semantic-highlight-func-mode
                                   ;;global-semantic-stickyfunc-mode

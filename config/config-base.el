@@ -1,5 +1,5 @@
 ;;; config-base.el --- 一些基本的设置，这些设置会改变 Emacs 的外观或者对大部分模式起作用
-;; Time-stamp: <2013-04-24 21:09:52 Jerry Xu>
+;; Time-stamp: <2013-05-22 20:09:26 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -156,10 +156,12 @@ the empty string."
 
 ;;; tramp --- 远程编辑文件
 ;; Usage: type `C-x C-f' and then enter the filename`/user@machine:/path/to.file
-;; 以下两行设置 tramp 远程连接的环境变量中的语言环境，可以解决 tramp 的中文乱码问题
-;(add-to-list 'tramp-remote-process-environment "LANG=zh_CN.utf8" 'append)
-;(add-to-list 'tramp-remote-process-environment "LC_ALL=zh_CN.utf8" 'append)
 (require 'tramp)
+(require 'tramp-sh)
+(delete "LC_ALL=C" tramp-remote-process-environment)
+;; 以下两行设置 tramp 远程连接的环境变量中的语言环境，可以解决 tramp 的中文乱码问题
+(add-to-list 'tramp-remote-process-environment "LANG=zh_CN.utf8" 'append)
+(add-to-list 'tramp-remote-process-environment "LC_ALL=zh_CN.utf8" 'append)
 (setq ido-enable-tramp-completion t
       tramp-persistency-file-name (expand-file-name "~/.emacs.d/auto-save-list/tramp"))
 

@@ -1,8 +1,10 @@
 ;;; config-base.el --- 一些基本的设置，这些设置会改变 Emacs 的外观或者对大部分模式起作用
-;; Time-stamp: <2013-05-22 20:09:26 Jerry Xu>
+;; Time-stamp: <2013-08-10 23:30:23 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
+(require 'switch-window) ;window navigation
+(setq switch-window-shortcut-style 'qwerty)
 (defun create-scratch-buffer nil
   "create a scratch buffer"
   (interactive)

@@ -1,6 +1,6 @@
 ;; config-auto-complete.el ---
 
-(require 'config-cedet)
+;;(require 'config-cedet)
 (require 'auto-complete-config)
 
 ;; 覆盖 auto-complete.el 的函数 ac-mode-dictionary，这样能加载多个目录下的字典文件
@@ -29,9 +29,9 @@
 (setq-default ac-sources (append (list 'ac-source-filename 'ac-source-yasnippet)
                                  ac-sources))
 
-(add-hook 'c-mode-common-hook
-          (lambda nil
-            (setq ac-sources (append (list 'ac-source-semantic 'ac-source-semantic-raw) ac-sources))))
+;;(add-hook 'c-mode-common-hook
+;;          (lambda nil
+;;            (setq ac-sources (append (list 'ac-source-semantic 'ac-source-semantic-raw) ac-sources))))
 
 (define-key ac-mode-map (kbd "M-/") 'auto-complete)
 (define-key ac-completing-map (kbd "<tab>") 'ac-expand)

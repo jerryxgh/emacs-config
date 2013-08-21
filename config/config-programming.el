@@ -35,8 +35,8 @@
 (require 'config-auto-complete) ;自动补全
 (require 'config-auto-insert) ;创建文件时自动插入模板
 (require 'config-autopair) ;自动补全括号
-(require 'config-cedet) ;Emacs集成开发环境
-(require 'config-ecb) ;ecb--集成 cedet 的各种功能
+;;(require 'config-cedet) ;Emacs集成开发环境
+;;(require 'config-ecb) ;ecb--集成 cedet 的各种功能
 (require 'config-yasnippet) ;模式的补全
 (setq-default indent-tabs-mode nil) ;缩进时不用 tab ，全部使用空格缩进(M-x tabify/untabify 将区域中的特定个数的空格替换成tab或相反)
 ;; cc-mode --- C like language, such as C C++ Java
@@ -122,6 +122,14 @@
     (let ((compilation-error-regexp-alist executable-error-regexp-alist))
       (compilation-start command t (lambda (x) "*interpretation*")))))
 (define-key sh-mode-map (kbd "<f9>") 'execute-interpret-immediately)
+
+
+;; tdl-mode --- tdl programming.
+(require 'tdl-mode)
+
+;; pdu-mode --- Protocol Data Unit and isl programming
+(require 'pdu-mode)
+
 
 
 ;;; config-programming.el ends here

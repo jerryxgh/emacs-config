@@ -108,7 +108,7 @@
 ;;   - Peter J Weisberg
 ;;   - Yann Hodique
 ;;   - Rémi Vanicat
-;; Version: 1.2.0-233-gc18cd5a
+;; Version: 
 ;; Keywords: tools
 
 ;; Magit is free software; you can redistribute it and/or modify it
@@ -712,7 +712,7 @@ This is calculated from `magit-highlight-indentation'.")
 (defvar magit-bug-report-url
   "http://github.com/magit/magit/issues")
 
-(defconst magit-version "1.2.0-233-gc18cd5a"
+(defconst magit-version ""
   "The version of Magit that you're using.")
 
 

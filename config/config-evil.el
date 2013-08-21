@@ -33,8 +33,8 @@
   
   (define-key evil-motion-state-map (kbd "C-i") 'evil-jump-forward)
 
-  (define-key evil-window-map (kbd "w") 'other-window)
-  (define-key evil-window-map (kbd "C-w") 'other-window))
+  (define-key evil-window-map (kbd "w") 'switch-window)
+  (define-key evil-window-map (kbd "C-w") 'switch-window))
 
 (config-evil-key-bindings)
 

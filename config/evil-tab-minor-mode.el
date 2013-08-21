@@ -86,7 +86,10 @@
     (if (functionp tab-command)
         (funcall tab-command))
     (if (and (eq (point) old-point)
-             (eq (following-char) ?\)))
+             (eq (following-char) ?\))
+             (eq (following-char) ?\})
+             (eq (following-char) ?\")
+             (eq (following-char) ?\'))
         (forward-char))))
 
 

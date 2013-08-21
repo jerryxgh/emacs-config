@@ -1,5 +1,5 @@
 ;;; config-base.el --- 一些基本的设置，这些设置会改变 Emacs 的外观或者对大部分模式起作用
-;; Time-stamp: <2013-08-10 23:30:23 Jerry Xu>
+;; Time-stamp: <2013-08-21 09:58:30 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -132,7 +132,7 @@ the empty string."
 (show-paren-mode 1) ;当指针移动到一个括号旁边，高亮匹配的另一个括号
 (tooltip-mode 0) ;关闭工具提示(老是一闪一闪的)
 (global-auto-revert-mode 1) ;文件变化时自动重新载入
-(global-subword-mode 1) ;对待大小写混合的单词，以大写字母作为单词的分隔
+;;(global-subword-mode 1) ;对待大小写混合的单词，以大写字母作为单词的分隔
 (scroll-bar-mode 0) ;去掉滚动条(也可以在注册表中或者.Xdefault中设置)
 (tool-bar-mode 0) ;去掉工具栏(也可以在注册表中或者.Xdefault中设置)
 (set-default-font "Consolas-11") ;设置默认字体(也可以在注册表中或者.Xdefault中设置)
@@ -159,7 +159,10 @@ the empty string."
 ;;; tramp --- 远程编辑文件
 ;; Usage: type `C-x C-f' and then enter the filename`/user@machine:/path/to.file
 (require 'tramp)
-(require 'tramp-sh)
+(if (featurep 'tramp-sh)
+    (require 'tramp-sh)
+)
+
 (delete "LC_ALL=C" tramp-remote-process-environment)
 ;; 以下两行设置 tramp 远程连接的环境变量中的语言环境，可以解决 tramp 的中文乱码问题
 (add-to-list 'tramp-remote-process-environment "LANG=zh_CN.utf8" 'append)

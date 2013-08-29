@@ -25,12 +25,6 @@
   (define-key evil-insert-state-map (kbd "C-w") 'evil-window-map)
   (define-key evil-insert-state-map (kbd "C-y") 'yank)
   
-  (define-key evil-visual-state-map (kbd "C-e") 'move-end-of-line)
-  
-  (define-key evil-normal-state-map (kbd "C-e") 'move-end-of-line)
-  
-  (define-key evil-operator-state-map (kbd "C-e") 'move-end-of-line)
-  
   (define-key evil-motion-state-map (kbd "C-i") 'evil-jump-forward)
 
   (define-key evil-window-map (kbd "w") 'switch-window)

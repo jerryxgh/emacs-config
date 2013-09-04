@@ -53,8 +53,9 @@
 (semantic-load-enable-code-helpers)
 (semantic-load-enable-excessive-code-helpers)
 (semantic-load-enable-semantic-debugging-helpers)
-(global-semantic-stickyfunc-mode nil)
-(global-semantic-show-unmatched-syntax-mode nil)
+(global-semantic-stickyfunc-mode -1)
+(global-semantic-show-unmatched-syntax-mode -1)
+(global-semantic-idle-completions-mode -1)
 
 
 ;;; config-cedet.el ends here

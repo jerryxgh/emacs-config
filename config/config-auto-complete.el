@@ -20,7 +20,7 @@
 (setq ac-auto-start 1 ;自动提示，如果是一个正整数，表示输入该数字的字符后开始自动补全，如果是nil则不自动提示
       ac-comphist-file "~/.emacs.d/auto-save-list/ac-comphist.dat"
       ac-modes (append ac-modes
-                       '(conf-xdefaults-mode html-mode nxml-mode nxhtml-mode objc-mode jde-mode sql-mode change-log-mode text-mode makefile-gmake-mode makefile-bsdmake-mo autoconf-mode makefile-automake-mode snippet-mode eshell-mode))
+                       '(tdl-mode conf-xdefaults-mode html-mode nxml-mode nxhtml-mode objc-mode jde-mode sql-mode change-log-mode text-mode makefile-gmake-mode makefile-bsdmake-mo autoconf-mode makefile-automake-mode snippet-mode eshell-mode))
       ac-use-menu-map t
       ;ac-use-quick-help nil
       ;ac-quick-help-delay 1
@@ -29,9 +29,9 @@
 (setq-default ac-sources (append (list 'ac-source-filename 'ac-source-yasnippet)
                                  ac-sources))
 
-;;(add-hook 'c-mode-common-hook
-;;          (lambda nil
-;;            (setq ac-sources (append (list 'ac-source-semantic 'ac-source-semantic-raw) ac-sources))))
+(add-hook 'c-mode-common-hook
+          (lambda nil
+            (setq ac-sources (append (list 'ac-source-gtags 'ac-source-semantic 'ac-source-semantic-raw) ac-sources))))
 
 (define-key ac-mode-map (kbd "M-/") 'auto-complete)
 (define-key ac-completing-map (kbd "<tab>") 'ac-expand)

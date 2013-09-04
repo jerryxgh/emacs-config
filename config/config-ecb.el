@@ -4,10 +4,9 @@
 ;(defvar stack-trace-on-error
 ;  "To be compatible with emacs 24")
 
-(custom-set-variables
- '(ecb-options-version "2.40"))
+(custom-set-variables '(ecb-options-version "2.40"))
 (defconst initial-frame-width (frame-width)
-  "This file will change the width of frame,remember the init value.")
+  "The width of frame will be changed ,remember the init value.")
 (setq ecb-compile-window-height 6
       ecb-compile-window-width 'edit-window
       ecb-compile-window-temporally-enlarge 'both
@@ -21,8 +20,8 @@
       ;;ecb-create-layout-frame-height 40
       ;;ecb-create-layout-frame-width 110
       )
-(add-to-list 'ecb-compilation-buffer-names '("*info*"))
-(add-to-list 'ecb-source-path  '("~/Git Repositories/Workspaces" "/root"))
+                                        ;(add-to-list 'ecb-compilation-buffer-names '("*info*"))
+                                        ;(add-to-list 'ecb-source-path  '("~/Git Repositories/Workspaces" "/root"))
 
 (add-hook 'ecb-show-ecb-windows-before-hook
           'ecb-enlarge-frame-width-before-show)
@@ -65,7 +64,7 @@
                      (eq (nth 5 ecb-last-window-config-before-deactivation)
                          ecb-windows-hidden-all-value))
                 (> (+ (frame-pixel-width) (* (frame-char-width)
-                                         (+ ecb-windows-width 2)))
+                                             (+ ecb-windows-width 2)))
                    (display-pixel-width)))
       (set-frame-width (selected-frame) (+ (frame-width) (+ ecb-windows-width 2))))))
 

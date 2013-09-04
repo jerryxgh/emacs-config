@@ -14,5 +14,10 @@
       )
 (add-to-list 'desktop-modes-not-to-save 'Info-mode)
 
+;; workgroups2 configuration
+(require 'workgroups2)
+;; Change some settings
+;(workgroups-mode 1)        ; put this one at the bottom of .emacs
+
 (provide 'config-desktop)
 ;;; config-desktop.el ends here ---

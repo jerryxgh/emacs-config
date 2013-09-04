@@ -1,5 +1,5 @@
 ;;; config-base.el --- 一些基本的设置，这些设置会改变 Emacs 的外观或者对大部分模式起作用
-;; Time-stamp: <2013-08-21 09:58:30 Jerry Xu>
+;; Time-stamp: <2013-08-29 15:54:20 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -127,6 +127,7 @@ the empty string."
                ))
     )
 
+(column-number-mode 1)
 (mouse-avoidance-mode 'animate) ;鼠标自动避开光标
 (global-hl-line-mode 1) ; 高亮当前行
 (show-paren-mode 1) ;当指针移动到一个括号旁边，高亮匹配的另一个括号

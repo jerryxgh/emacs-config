@@ -28,7 +28,14 @@
   (define-key evil-motion-state-map (kbd "C-i") 'evil-jump-forward)
 
   (define-key evil-window-map (kbd "w") 'switch-window)
-  (define-key evil-window-map (kbd "C-w") 'switch-window))
+  (define-key evil-window-map (kbd "C-w") 'switch-window)
+;;  (if (featurep 'switch-window)
+;;      (dolist index-key-pair (list '(1 "C-a") '(2 "C-s") '(3 "C d") '(4 "C-f"))
+;;              (define-key evil-window-map (kbd (cdar index-key-pair))
+;;                '(lambda ()
+;;                   (interactive)
+;;                   (apply-to-window-index 'select-window (car index-key-pair) "Move to %S"))
+)
 
 (config-evil-key-bindings)
 

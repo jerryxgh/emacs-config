@@ -129,6 +129,8 @@
 ;; pdu-mode --- Protocol Data Unit and isl programming
 (require 'pdu-mode)
 
+;; mpr-mode --- MSC Plain Representation
+(require 'mpr-mode)
 
 
 ;;; config-programming.el ends here

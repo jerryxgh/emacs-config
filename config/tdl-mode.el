@@ -32,7 +32,7 @@
 
 (provide 'tdl-mode)
 
-(define-derived-mode tdl-mode java-mode "TDL"
+(define-derived-mode tdl-mode c++-mode "TDL"
   "Major mode for TDL programming."
   (font-lock-add-keywords 'tdl-mode
                           '(("\\<\\(set\\|include\\|stop\\|start\\|in\\|out\\|to\\|with\\)\\>" . font-lock-keyword-face)

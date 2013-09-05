@@ -1,10 +1,10 @@
-;;; pdu-mode.el --- 
+;;; mpr-mode.el --- 
 
 ;; Copyright 2013 Jerry Xu
 ;;
 ;; Author: Jerry Xu jerryxgh@gmail.com
 ;; Version: 0.0
-;; Keywords: pdu - Protocol Data Unit
+;; Keywords: mpr TAT
 ;; X-URL: not distributed yet
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -26,21 +26,22 @@
 ;; 
 
 ;; Put this file into your load-path and the following into your ~/.emacs:
-;;   (require 'pdu-mode)
+;;   (require 'mpr-mode)
 
 ;;; Code:
 
-(provide 'pdu-mode)
+(provide 'mpr-mode)
 
-(define-derived-mode pdu-mode c++-mode "PDU"
-  "Major mode for TDL programming."
-  (font-lock-add-keywords 'pdu-mode
-                          '(("\\<\\(iei\\|messagetype\\|header\\|bidirectionalmessages\\|packmessages\\|unpackmessages\\|option\\|nextstate\\|state\\|start\\|in\\|out\\|to\\|with\\|length\\|case\\|export\\|import\\|use\\|include\\|package\\)\\>" . font-lock-keyword-face)
-                            ("\\<\\(byte\\|bytes\\|bit\\|bits\\|field\\|message\\|interface\\)\\>" . font-lock-type-face))))
+(define-derived-mode mpr-mode c++-mode "MPR"
+  "Major mode for mpr script writing."
+  (font-lock-add-keywords 'mpr-mode
+                          '(("\\<\\(mscdocument\\|msc\\|endmsc\\|text\\|instance\\|endinstance\\|reference\\|action\\|to\\|from\\|in\\|out\\)\\>" . font-lock-keyword-face)
+                            ("\\<\\(TAT\\|SUT\\)\\>" . font-lock-type-face))))
 
 (setq auto-mode-alist
         (append
-         '(("\\.pdu\\'" . pdu-mode))
+         '(("\\.mpr\\'" . mpr-mode))
          auto-mode-alist))
 
-;;; pdu-mode.el ends here
+
+;;; mpr-mode.el ends here

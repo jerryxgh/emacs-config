@@ -20,7 +20,7 @@
 (setq ac-auto-start 1 ;自动提示，如果是一个正整数，表示输入该数字的字符后开始自动补全，如果是nil则不自动提示
       ac-comphist-file "~/.emacs.d/auto-save-list/ac-comphist.dat"
       ac-modes (append ac-modes
-                       '(tdl-mode conf-xdefaults-mode html-mode nxml-mode nxhtml-mode objc-mode jde-mode sql-mode change-log-mode text-mode makefile-gmake-mode makefile-bsdmake-mo autoconf-mode makefile-automake-mode snippet-mode eshell-mode))
+                       '(mpr-mode pdu-mode tdl-mode conf-xdefaults-mode html-mode nxml-mode nxhtml-mode objc-mode jde-mode sql-mode change-log-mode text-mode makefile-gmake-mode makefile-bsdmake-mo autoconf-mode makefile-automake-mode snippet-mode eshell-mode))
       ac-use-menu-map t
       ;ac-use-quick-help nil
       ;ac-quick-help-delay 1

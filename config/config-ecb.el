@@ -17,6 +17,8 @@
       ecb-tip-of-the-day nil
       ecb-tip-of-the-day-file "~/.emacs/auto-save-list/.ecb-tip-of-day.el"
       ecb-primary-secondary-mouse-buttons 'mouse-1--mouse-2 ;改变鼠标的行为
+      semantic-decoration-styles (list '("semantic-decoration-on-includes" . t)
+                                       '("semantic-tag-boundary" . t))
       ;;ecb-create-layout-frame-height 40
       ;;ecb-create-layout-frame-width 110
       )

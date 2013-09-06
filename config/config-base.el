@@ -1,5 +1,5 @@
 ;;; config-base.el --- 一些基本的设置，这些设置会改变 Emacs 的外观或者对大部分模式起作用
-;; Time-stamp: <2013-08-29 15:54:20 Jerry Xu>
+;; Time-stamp: <2013-09-06 10:08:13 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -47,12 +47,16 @@
 (defun toggle-eshell-buffer ()
   "If current buffer is eshell buffer, switch to previous buffer. If current buffer is not eshell buffer, switch to eshell buffer,if that does'texists, create one and swich to it."
   (interactive)
-  (if (equal (buffer-name (current-buffer)) eshell-buffer-name)
+  (toggle-shell-buffer eshell-buffer-name 'eshell)
+  )
+
+(defun toggle-shell-buffer (shell-buffer-name shell-command)
+  (if (equal (buffer-name (current-buffer)) shell-buffer-name)
       (goto-previous-buffer)
-    (let ((eshell-buffer (get-buffer eshell-buffer-name)))
-      (if eshell-buffer
-	  (switch-to-buffer-smartly eshell-buffer))
-      (eshell))))
+    (let ((shell-buffer (get-buffer shell-buffer-name)))
+      (if shell-buffer
+	  (switch-to-buffer-smartly shell-buffer))
+      (shell-command))))
 
 (defun switch-to-buffer-smartly (buffer-to-swich)
   "Switch to buffer, if buffer has been shown in a window, goto that window, else act as switch-to-buffer"

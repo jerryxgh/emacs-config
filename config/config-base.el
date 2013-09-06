@@ -1,5 +1,5 @@
 ;;; config-base.el --- 一些基本的设置，这些设置会改变 Emacs 的外观或者对大部分模式起作用
-;; Time-stamp: <2013-09-06 10:08:13 Jerry Xu>
+;; Time-stamp: <2013-09-06 17:51:33 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -34,14 +34,14 @@
 (defun goto-previous-buffer ()
   "Back to the previous buffer."
   (interactive)
-  (let ((buffer-to-swich
+  (let ((buffer-to-switch
 	 (catch 'break
 	   (dolist (buffer (buffer-list (selected-frame)))
 	     (unless (or (string-match "^ \\*" (buffer-name buffer))
 			 (eq buffer (current-buffer)))
 	       (throw 'break buffer))))))
-    (if buffer-to-swich
-	(switch-to-buffer-smartly buffer-to-swich)
+    (if buffer-to-switch
+	(switch-to-buffer-smartly buffer-to-switch)
       (message "Don't know which buffer to go..."))))
 
 (defun toggle-eshell-buffer ()
@@ -58,15 +58,15 @@
 	  (switch-to-buffer-smartly shell-buffer))
       (shell-command))))
 
-(defun switch-to-buffer-smartly (buffer-to-swich)
+(defun switch-to-buffer-smartly (buffer-to-switch)
   "Switch to buffer, if buffer has been shown in a window, goto that window, else act as switch-to-buffer"
   (let ((window-to-select (catch 'found
 			    (walk-windows #'(lambda (window)
-					      (if (eq buffer-to-swich (window-buffer window))
+					      (if (eq buffer-to-switch (window-buffer window))
 						  (throw 'found window)))))))
     (if window-to-select
 	(select-window window-to-select)
-      (switch-to-buffer buffer-to-swich))))
+      (switch-to-buffer buffer-to-switch))))
 ;;;覆盖原有函数定义
 (defun bookmark-completing-read (prompt &optional default)
   "Prompting with PROMPT, read a bookmark name in ido completion.

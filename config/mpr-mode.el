@@ -35,7 +35,7 @@
 (define-derived-mode mpr-mode c++-mode "MPR"
   "Major mode for mpr script writing."
   (font-lock-add-keywords 'mpr-mode
-                          '(("\\<\\(mscdocument\\|msc\\|endmsc\\|text\\|instance\\|endinstance\\|reference\\|action\\|to\\|from\\|in\\|out\\)\\>" . font-lock-keyword-face)
+                          '(("\\<\\(via\\|mscdocument\\|msc\\|endmsc\\|text\\|instance\\|endinstance\\|reference\\|action\\|to\\|from\\|in\\|out\\)\\>" . font-lock-keyword-face)
                             ("\\<\\(TAT\\|SUT\\)\\>" . font-lock-type-face))))
 
 (setq auto-mode-alist

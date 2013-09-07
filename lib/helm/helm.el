@@ -409,6 +409,10 @@ you want this mode enabled definitely."
   :group 'helm
   :type 'boolean)
 
+(defcustom helm-prevent-escaping-from-minibuffer t
+  "Prevent escaping from minibuffer during helm session."
+  :group 'helm
+  :type 'boolean)
 
 ;;; Faces
 ;;
@@ -1720,25 +1724,27 @@ Possible value of SAVE-OR-RESTORE are 'save and 'restore.
 window or frame configuration is saved/restored according to values of
 `helm-save-configuration-functions'."
   (helm-log-eval helm-save-configuration-functions)
-  (case save-or-restore
-    (save    (setq helm-last-frame-or-window-configuration
-                   (funcall (cdr helm-save-configuration-functions))))
-    (restore (funcall (car helm-save-configuration-functions)
-                      helm-last-frame-or-window-configuration)
-             ;; Restore frame focus.
-             (let ((frame
-                    (and (listp helm-last-frame-or-window-configuration)
-                         (caadr helm-last-frame-or-window-configuration))))
-               ;; If `helm-save-configuration-functions' are window functions
-               ;; frame should be nil, use current frame.
-               (unless (framep frame)
-                 ;; This is needed for minibuffer own-frame config
-                 ;; when recursive minibuffers are in use.
-                 ;; e.g M-: + helm-minibuffer-history.
-                 (setq frame (if (minibufferp helm-current-buffer)
-                                 (selected-frame)
-                                 (last-nonminibuffer-frame))))
-               (select-frame-set-input-focus frame)))))
+  (let ((window-persistent-parameters (append '((no-other-window . t))
+                                              window-persistent-parameters)))
+    (case save-or-restore
+      (save    (setq helm-last-frame-or-window-configuration
+                     (funcall (cdr helm-save-configuration-functions))))
+      (restore (funcall (car helm-save-configuration-functions)
+                        helm-last-frame-or-window-configuration)
+               ;; Restore frame focus.
+               (let ((frame
+                      (and (listp helm-last-frame-or-window-configuration)
+                           (caadr helm-last-frame-or-window-configuration))))
+                 ;; If `helm-save-configuration-functions' are window functions
+                 ;; frame should be nil, use current frame.
+                 (unless (framep frame)
+                   ;; This is needed for minibuffer own-frame config
+                   ;; when recursive minibuffers are in use.
+                   ;; e.g M-: + helm-minibuffer-history.
+                   (setq frame (if (minibufferp helm-current-buffer)
+                                   (selected-frame)
+                                   (last-nonminibuffer-frame))))
+                 (select-frame-set-input-focus frame))))))
 
 (defun helm-split-window-default-fn (window)
   (let (split-width-threshold)
@@ -1769,7 +1775,9 @@ window or frame configuration is saved/restored according to values of
         (split-window-sensibly window))))
 
 
-;; Core: Display *helm* buffer
+;;; Display helm buffer
+;;
+;;
 (defun helm-display-buffer (buffer)
   "Display BUFFER.
 The function used to display `helm-buffer'."
@@ -1797,7 +1805,17 @@ The function used to display `helm-buffer'."
              helm-split-window-default-side)))
     (prog1
         (funcall (with-current-buffer buffer helm-display-function) buffer)
-      (setq helm-onewindow-p (one-window-p t)))))
+      (setq helm-onewindow-p (one-window-p t))
+      ;; Don't allow other-window and friends switching out of minibuffer.
+      (when helm-prevent-escaping-from-minibuffer
+        (helm-prevent-switching-other-window)))))
+
+(defun* helm-prevent-switching-other-window (&key (enabled t))
+  "Allow setting `no-other-window' window parameter in all windows.
+Arg ENABLE-OR-DISABLE will be the value of `no-other-window'."
+  (walk-windows
+   #'(lambda (w)
+       (set-window-parameter w 'no-other-window enabled)) 0))
 
 (defun helm-default-display-buffer (buffer)
   "Default function to display `helm-buffer' BUFFER.
@@ -2066,16 +2084,17 @@ if some when multiples sources are present."
   "Clean up the mess when helm exit or quit."
   (helm-log "start cleanup")
   (with-current-buffer helm-buffer
-    ;; If we end up for any reasons (error etc...)
-    ;; with an helm-buffer staying around (visible),
-    ;; we will have no cursor in this buffer when switching to it.
-    (setq cursor-type t)
-    (bury-buffer)
+    ;; bury-buffer from this window.
+    (bury-buffer) ;[1]
     ;; Be sure we call this from helm-buffer.
     (helm-funcall-foreach 'cleanup))
   (helm-kill-async-processes)
   (helm-log-run-hook 'helm-cleanup-hook)
   (helm-frame-or-window-configuration 'restore)
+  ;; [1] now bury-buffer from underlying windows otherwise,
+  ;; if this window is killed the underlying buffer will
+  ;; be an helm buffer.
+  (replace-buffer-in-windows helm-buffer)
   (setq helm-alive-p nil)
   (setq helm-in-file-completion-p nil)
   ;; This is needed in some cases where last input
@@ -2176,7 +2195,6 @@ Helm plug-ins are realized by this function."
                                                  candidate-fn source))))
                                    (and (listp result) result))))
                        (invalid-regexp nil)
-                       (wrong-type-argument nil)
                        (error (funcall type-error err)))))
     (when (and (processp candidates) (not candidate-proc))
       (warn "Candidates function `%s' should be called in a `candidates-process' attribute"
@@ -2518,15 +2536,22 @@ is done on whole `helm-buffer' and not on current source."
 
 (defun helm-update-source-p (source)
   "Whether SOURCE need updating or not."
-  (and (or (not helm-source-filter)
-           (member (assoc-default 'name source) helm-source-filter))
-       (>= (length helm-pattern)
-           (helm-aif (assoc 'requires-pattern source)
-               (or (cdr it) 1)
-             0))
-       ;; These incomplete regexps hang helm forever
-       ;; so defer update.
-       (not (member helm-pattern helm-update-blacklist-regexps))))
+  (let ((len (string-width
+              (if (or (not (assoc 'no-matchplugin source))
+                      helm-match-plugin-mode)
+                  ;; Don't count spaces entered when using
+                  ;; match-plugin.
+                  (replace-regexp-in-string " " "" helm-pattern)
+                  helm-pattern))))
+    (and (or (not helm-source-filter)
+             (member (assoc-default 'name source) helm-source-filter))
+         (>= len
+             (helm-aif (assoc 'requires-pattern source) (or (cdr it) 1) 0))
+         ;; These incomplete regexps hang helm forever
+         ;; so defer update. Maybe replace spaces quoted when using
+         ;; match-plugin-mode.
+         (not (member (replace-regexp-in-string "\\s\\" "" helm-pattern)
+                      helm-update-blacklist-regexps)))))
 
 (defun helm-delayed-source-p (source)
   "Wheter SOURCE is a delayed source or not."
@@ -2777,7 +2802,8 @@ If PRESERVE-SAVED-ACTION is non--nil save action."
                         (helm-get-selection helm-action-buffer)
                         (helm-get-action)))))
   (let ((source (or helm-saved-current-source
-                    (helm-get-current-source))))
+                    (helm-get-current-source)))
+        non-essential)
     (setq selection (or selection
                         (helm-get-selection)
                         (and (assoc 'accept-empty source) "")))
@@ -3602,36 +3628,42 @@ Arg DATA can be either a list or a plain string."
     source))
 
 
-;; Utility: resplit helm window
+;;; Resplit helm window
+;;
 ;;;###autoload
 (defun helm-toggle-resplit-window ()
   "Toggle resplit helm window, vertically or horizontally."
   (interactive)
-  (with-helm-window
-    (if (or helm-full-frame (one-window-p t))
-        (message "Error: Attempt to resplit a single window")
-        (let ((before-height (window-height)))
-          (delete-window)
-          (set-window-buffer
-           (select-window
-            (if (= (window-height) before-height) ; initial split was horizontal.
-                ;; Split window vertically with `helm-buffer' placed
-                ;; on the good side according to actual value of
-                ;; `helm-split-window-default-side'.
-                (prog1
-                    (cond ((or (eq helm-split-window-default-side 'above)
-                               (eq helm-split-window-default-side 'left))
-                           (split-window
-                            (selected-window) nil 'above))
-                          (t (split-window-vertically)))
-                  (setq helm-split-window-state 'vertical))
-                ;; Split window vertically, same comment as above.
-                (setq helm-split-window-state 'horizontal)
-                (cond ((or (eq helm-split-window-default-side 'left)
-                           (eq helm-split-window-default-side 'above))
-                       (split-window (selected-window) nil 'left))
-                      (t (split-window-horizontally)))))
-           helm-buffer)))))
+  (when helm-prevent-escaping-from-minibuffer
+    (helm-prevent-switching-other-window :enabled nil))
+  (unwind-protect
+       (with-helm-window
+         (if (or helm-full-frame (one-window-p t))
+             (message "Error: Attempt to resplit a single window")
+             (let ((before-height (window-height)))
+               (delete-window)
+               (set-window-buffer
+                (select-window
+                 (if (= (window-height) before-height) ; initial split was horizontal.
+                     ;; Split window vertically with `helm-buffer' placed
+                     ;; on the good side according to actual value of
+                     ;; `helm-split-window-default-side'.
+                     (prog1
+                         (cond ((or (eq helm-split-window-default-side 'above)
+                                    (eq helm-split-window-default-side 'left))
+                                (split-window
+                                 (selected-window) nil 'above))
+                               (t (split-window-vertically)))
+                       (setq helm-split-window-state 'vertical))
+                     ;; Split window vertically, same comment as above.
+                     (setq helm-split-window-state 'horizontal)
+                     (cond ((or (eq helm-split-window-default-side 'left)
+                                (eq helm-split-window-default-side 'above))
+                            (split-window (selected-window) nil 'left))
+                           (t (split-window-horizontally)))))
+                helm-buffer))))
+    (when helm-prevent-escaping-from-minibuffer
+      (helm-prevent-switching-other-window :enabled nil))))
 
 ;; Utility: Resize helm window.
 (defun helm-enlarge-window-1 (n)

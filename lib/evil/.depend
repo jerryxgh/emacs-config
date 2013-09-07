@@ -4,6 +4,7 @@ evil-commands.elc: evil-search.elc
 evil-commands.elc: evil-ex.elc
 evil-commands.elc: evil-types.elc
 evil-common.elc: evil-vars.elc
+evil-common.elc: evil-digraphs.elc
 evil-core.elc: evil-common.elc
 evil-digraphs.elc: evil-vars.elc
 evil.elc: evil-vars.elc
@@ -23,6 +24,9 @@ evil-ex.elc: evil-common.elc
 evil-ex.elc: evil-states.elc
 evil-integration.elc: evil-maps.elc
 evil-integration.elc: evil-core.elc
+evil-integration.elc: evil-macros.elc
+evil-integration.elc: evil-types.elc
+evil-integration.elc: evil-repeat.elc
 evil-macros.elc: evil-common.elc
 evil-macros.elc: evil-states.elc
 evil-macros.elc: evil-repeat.elc

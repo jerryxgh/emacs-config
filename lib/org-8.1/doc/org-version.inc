@@ -1,3 +1,3 @@
 @c automatically generated, do not edit
-@set VERSION 8.1 (release_8.1)
-@set DATE 2013-09-06
+@set VERSION 8.1 (8.1-dist)
+@set DATE 2013-09-08

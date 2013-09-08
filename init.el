@@ -47,17 +47,18 @@
 
 (provide 'init)
 
-(defun add-to-load-path-recursively-and-smartly (filename)
-  "Add filename to load-path recursively and smartly, smartly means only add those dirs which have el or elc files in them."
+(defun add-directory-to-load-path-recursively (directory exclude-directories-list)
+  "Add filename to load-path recursively, only add those dirs which have el or elc files."
   (interactive)
-  (let (dir-stack)
-    (push filename dir-stack)
-    (while dir-stack
-      (let ((current-dir (pop dir-stack)))
-        (if (file-directory-p current-dir)
-            (let ((file-list (directory-files current-dir t))
-                  file
-                  has-el-or-elc)
+  (unless (file-directory-p directory)
+    (setq directory (file-name-directory directory))
+  (let (directory-stack (suffixes (get-load-suffixes)))
+    (if (file-exists-p directory)
+	(push directory directory-stack))
+    (while directory-stack
+      (let ((current-directory (pop directory-stack)))
+	(let ((file-list (directory-files current-dir t))
+                  should)
               (dolist (file file-list)
                 (let ((file-nondirectory (file-name-nondirectory file)))
                   (if (file-directory-p file)

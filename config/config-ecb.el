@@ -1,8 +1,12 @@
 ;;; config-ecb.el ---
-(require 'config-cedet)
+(if (or (< emacs-major-version 23)
+	(and (= emacs-major-version 23)
+	     (<= emacs-minor-version 1)))
+    (require 'config-cedet)
+  (require 'config-cedet-built-in))
 (require 'ecb)
-;(defvar stack-trace-on-error
-;  "To be compatible with emacs 24")
+					;(defvar stack-trace-on-error
+					;  "To be compatible with emacs 24")
 
 (custom-set-variables '(ecb-options-version "2.40"))
 (defconst initial-frame-width (frame-width)

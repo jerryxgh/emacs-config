@@ -103,6 +103,7 @@
    (t nil)))
 (add-to-list 'semantic-inhibit-functions 'config-semantic-inhibit-func)
 
+
 (defadvice semantic-mrub-completing-read (around semantic-mrub-completing-read-around activate)
   "use ido-completing-read in semantic-mrub-completing-read"
   (if (ring-empty-p (oref semantic-mru-bookmark-ring ring))

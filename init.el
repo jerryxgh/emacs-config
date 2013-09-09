@@ -47,32 +47,48 @@
 
 (provide 'init)
 
-(defun add-to-load-path-recursively-and-smartly (filename)
-  "Add filename to load-path recursively and smartly, smartly means only add those dirs which have el or elc files in them."
+(defun add-directory-to-load-path-recursively (directory &optional exclude-directories-list)
+  "Add filename to load-path recursively, only add those dirs which have el or elc files."
   (interactive)
-  (let (dir-stack)
-    (push filename dir-stack)
-    (while dir-stack
-      (let ((current-dir (pop dir-stack)))
-        (if (file-directory-p current-dir)
-            (let ((file-list (directory-files current-dir t))
-                  file
-                  has-el-or-elc)
-              (dolist (file file-list)
-                (let ((file-nondirectory (file-name-nondirectory file)))
-                  (if (file-directory-p file)
-                      (if (and (not (equal file-nondirectory "."))
-                               (not (equal file-nondirectory "..")))
-                          (push file dir-stack))
-                    (if (and (not has-el-or-elc) (string-match "\\.elc?" file-nondirectory))
-                        (setq has-el-or-elc t)))))
-              (if has-el-or-elc
-                  (add-to-list 'load-path current-dir))))))))
+  (unless (file-directory-p directory)
+    (setq directory (file-name-directory directory)))
+  (let (directory-stack (suffixes (get-load-suffixes)))
+    (if (file-exists-p directory)
+      (push directory directory-stack))
+    (while directory-stack
+           (let* ((current-directory (pop directory-stack))
+                  (file-list (directory-files current-directory t))
+                  should-add-to-load-path)
+             (dolist (file file-list)
+               (let ((file-name (file-name-nondirectory file)))
+                 (if (file-directory-p file)
+                   (if (and (not (equal file-name "."))
+                            (not (equal file-name ".."))
+                            (not (member file-name exclude-directories-list)))
+                     (push file directory-stack))
+                   (if (and (not should-add-to-load-path)
+                            (member (file-name-extension file t) suffixes))
+                     (setq should-add-to-load-path t)))))
+             (if should-add-to-load-path
+               (add-to-list 'load-path current-directory))))))
 
 (defvar emacs-config-dir (file-name-directory load-file-name)
   "Emacs config file directory, including plugins and config files."
-)
-(add-to-load-path-recursively-and-smartly emacs-config-dir)
+  )
+(defvar exclude-directories '()
+  "Directory names which should be excluded from load-path.")
+(progn (if (< emacs-major-version 24)
+         (add-to-list 'exclude-directories "js2-mode-emacs24")
+         (add-to-list 'exclude-directories "js2-mode-emacs23"))
+       (if (or (< emacs-major-version 23)
+               (and (= emacs-major-version 23)
+                    (<= emacs-minor-version 1)))
+         (add-to-list 'exclude-directories "ecb")
+         (setq exclude-directories (append '("ecb_patched_to_work_with_cedet_1_1"
+                                                                                  "cedet-1.1")
+                                                                                exclude-directories))))
+
+(add-directory-to-load-path-recursively emacs-config-dir exclude-directories)
 
 
 (require 'config-base) ;基础设置，大部分模式共享

@@ -1,0 +1,32 @@
+2013-08-29  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Sync with yasnippet/master
+
+2013-08-28  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* packages/yasnippet: Fix up copyright headers.
+
+2013-08-28  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Sync with yasnippet/master
+
+2013-08-28  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Add YAsnippet metadata.
+
+2013-08-22  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Only keep the strictly necessary *-pkg.el files
+
+2012-09-24  Chong Yidong  <cyd@gnu.org>
+
+	Add missing file yasnippet-pkg.el
+
+2012-09-24  Chong Yidong  <cyd@gnu.org>
+
+	Add README file for yasnippet.
+
+2012-09-24  João Távora  <joaotavora@gmail.com>
+
+	Add yasnippet.
+

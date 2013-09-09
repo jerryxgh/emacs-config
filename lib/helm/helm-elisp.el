@@ -138,22 +138,26 @@ If `helm-turn-on-show-completion' is nil just do nothing."
           (or (boundp sym) (fboundp sym) (symbol-plist sym)))
         #'fboundp)))
 
-(defun helm-thing-before-point (&optional limits)
+(defun helm-thing-before-point (&optional limits regexp)
   "Return symbol name before point.
-With LIMITS arg specified return the beginning and en position
+If REGEXP is specified return what REGEXP find before point.
+By default match the beginning of symbol before point.
+With LIMITS arg specified return the beginning and end position
 of symbol before point."
   (save-excursion
-    (let ((beg (point)))
+    (let (beg (end (point)))
       (when (re-search-backward
-             "\\_<" (field-beginning nil nil (point-at-bol)) t)
+             (or regexp "\\_<")
+             (field-beginning nil nil (point-at-bol)) t)
+        (setq beg (match-end 0))
         (if limits
-            (cons (match-end 0) beg)
-            (buffer-substring-no-properties beg (match-end 0)))))))
+            (cons beg end)
+            (buffer-substring-no-properties beg end))))))
 
-(defun helm-bounds-of-thing-before-point ()
+(defun helm-bounds-of-thing-before-point (&optional regexp)
   "Get the beginning and end position of `helm-thing-before-point'.
 Return a cons \(beg . end\)."
-  (helm-thing-before-point 'limits))
+  (helm-thing-before-point 'limits regexp))
 
 (defun helm-insert-completion-at-point (beg end str)
   ;; When there is no space after point
@@ -164,8 +168,10 @@ Return a cons \(beg . end\)."
   ;; next arg which is unwanted.
   (delete-region beg end)
   (insert str)
-  (let ((pos (cdr (bounds-of-thing-at-point 'symbol))))
-    (when (< (point) pos)
+  (let ((pos (cdr (or (bounds-of-thing-at-point 'symbol)
+                      ;; needed for helm-dabbrev.
+                      (bounds-of-thing-at-point 'filename)))))
+    (when (and pos (< (point) pos))
       (push-mark pos t t))))
 
 ;;;###autoload
@@ -211,6 +217,7 @@ Return a cons \(beg . end\)."
                             beg end candidate)))))
            :input (if helm-match-plugin-enabled (concat target " ") target)
            :resume 'noresume
+           :buffer "*helm lisp completion*"
            :allow-nest t))
         (message "[No Match]"))))
 

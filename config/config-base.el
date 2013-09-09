@@ -1,5 +1,5 @@
 ;;; config-base.el --- 一些基本的设置，这些设置会改变 Emacs 的外观或者对大部分模式起作用
-;; Time-stamp: <2013-09-06 17:51:33 Jerry Xu>
+;; Time-stamp: <2013-09-08 21:38:57 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -164,9 +164,7 @@ the empty string."
 ;;; tramp --- 远程编辑文件
 ;; Usage: type `C-x C-f' and then enter the filename`/user@machine:/path/to.file
 (require 'tramp)
-(if (featurep 'tramp-sh)
-    (require 'tramp-sh)
-)
+(with-demoted-errors (require 'tramp-sh))
 
 (delete "LC_ALL=C" tramp-remote-process-environment)
 ;; 以下两行设置 tramp 远程连接的环境变量中的语言环境，可以解决 tramp 的中文乱码问题

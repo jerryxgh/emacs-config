@@ -93,13 +93,42 @@ but the initial search for all candidates in buffer(s)."
                      thereis (string-match r (buffer-name buf)))
         collect buf))
 
-(defun helm-dabbrev--same-major-mode-p (buf)
-  (or (or (assoc major-mode helm-dabbrev-major-mode-assoc)
-          (rassoc major-mode helm-dabbrev-major-mode-assoc))
-      (eq major-mode (with-helm-current-buffer major-mode))))
+(defun helm-dabbrev--same-major-mode-p (start-buffer)
+  ;; START-BUFFER is the current-buffer where we start searching.
+  ;; Determine the major-mode of START-BUFFER as `cur-maj-mode'.
+  ;; Each time the loop go in another buffer we try to find if its
+  ;; `major-mode' is:
+  ;; - same as the `cur-maj-mode'
+  ;; - derived from `cur-maj-mode'
+  ;; - have an assoc entry (major-mode . cur-maj-mode)
+  ;; - have an rassoc entry (cur-maj-mode . major-mode)
+  ;; - check if one of these entries inherit from another one in
+  ;;   `helm-dabbrev-major-mode-assoc'.
+  (let* ((cur-maj-mode  (with-current-buffer start-buffer major-mode))
+         (c-assoc-mode  (assq cur-maj-mode helm-dabbrev-major-mode-assoc))
+         (c-rassoc-mode (rassq cur-maj-mode helm-dabbrev-major-mode-assoc))
+         (o-assoc-mode  (assq major-mode helm-dabbrev-major-mode-assoc))
+         (o-rassoc-mode (rassq major-mode helm-dabbrev-major-mode-assoc))
+         (cdr-c-assoc-mode (cdr c-assoc-mode))
+         (cdr-o-assoc-mode (cdr o-assoc-mode)))
+    (or (eq major-mode cur-maj-mode)
+        (derived-mode-p cur-maj-mode)
+        (or (eq cdr-c-assoc-mode major-mode)
+            (eq (car c-rassoc-mode) major-mode)
+            (eq (cdr (assq cdr-c-assoc-mode helm-dabbrev-major-mode-assoc))
+                major-mode)
+            (eq (car (rassq cdr-c-assoc-mode helm-dabbrev-major-mode-assoc))
+                major-mode))
+        (or (eq cdr-o-assoc-mode cur-maj-mode)
+            (eq (car o-rassoc-mode) cur-maj-mode)
+            (eq (cdr (assq cdr-o-assoc-mode helm-dabbrev-major-mode-assoc))
+                cur-maj-mode)
+            (eq (car (rassq cdr-o-assoc-mode helm-dabbrev-major-mode-assoc))
+                cur-maj-mode)))))
 
 (defun helm-dabbrev--collect (str limit ignore-case all)
   (let ((case-fold-search ignore-case)
+        (buffer1 (current-buffer))
         (search-and-store
          #'(lambda (pattern direction)
              (declare (special result pos-before pos-after))
@@ -120,15 +149,22 @@ but the initial search for all candidates in buffer(s)."
                                     (point))))
                              (setq pos-before pos)
                              (search-backward pattern pos t))))
-               (let ((match (substring-no-properties
-                             (thing-at-point 'symbol)))) 
-                 (unless (or (string= str match) (member match result))
-                   (push match result)))))))
+               (let* ((match-1 (substring-no-properties
+                                (thing-at-point 'symbol)))
+                      (match-2 (substring-no-properties
+                                (thing-at-point 'filename)))
+                      (lst (if (string= match-1 match-2)
+                               (list match-1)
+                               (list match-1 match-2))))
+                 (loop for match in lst
+                       unless (or (string= str match)
+                                  (member match result))
+                       do (push match result)))))))
     (loop with result with pos-before with pos-after
           for buf in (if all (helm-dabbrev--buffer-list)
                          (list (current-buffer)))
           do (with-current-buffer buf
-               (when (helm-dabbrev--same-major-mode-p buf)
+               (when (helm-dabbrev--same-major-mode-p buffer1)
                  (save-excursion
                    ;; Start searching before thing before point.
                    (goto-char (- (point) (length str)))
@@ -189,11 +225,12 @@ but the initial search for all candidates in buffer(s)."
                      'helm-insert-completion-at-point
                      beg end candidate)))))))
 
+(defvar helm-dabbrev--regexp "\\s-\\|\t\\|[(\[\{\"'`]\\|^")
 ;;;###autoload
 (defun helm-dabbrev ()
   (interactive)
-  (let ((dabbrev (helm-thing-before-point))
-        (limits (helm-bounds-of-thing-before-point))
+  (let ((dabbrev (helm-thing-before-point nil helm-dabbrev--regexp))
+        (limits (helm-bounds-of-thing-before-point helm-dabbrev--regexp))
         (enable-recursive-minibuffers t)
         (cycling-disabled-p (or (null helm-dabbrev-cycle-thresold)
                                 (zerop helm-dabbrev-cycle-thresold)))
@@ -201,6 +238,8 @@ but the initial search for all candidates in buffer(s)."
         (helm-quit-if-no-candidate
          #'(lambda ()
              (message "[Helm-dabbrev: No expansion found]"))))
+    (assert (and (stringp dabbrev) (not (string= dabbrev "")))
+            nil "[Helm-dabbrev: Nothing found before point]")
     (when (and
            ;; have been called at least once.
            (helm-dabbrev-info-p helm-dabbrev--data)

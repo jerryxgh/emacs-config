@@ -23,5 +23,7 @@
 (define-key global-map (kbd "C-c l") 'org-store-link)
 (define-key global-map (kbd "C-c c") 'org-capture)
 
+(require 'config-org2blog)
+
 (provide 'config-org)
 ;;; config-org.el ends here ---

@@ -1,5 +1,5 @@
 ;;; config-base.el --- 一些基本的设置，这些设置会改变 Emacs 的外观或者对大部分模式起作用
-;; Time-stamp: <2013-09-08 21:38:57 Jerry Xu>
+;; Time-stamp: <2013-10-16 23:29:55 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -49,6 +49,21 @@
   (interactive)
   (toggle-shell-buffer eshell-buffer-name 'eshell)
   )
+(add-hook 'eshell-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-c h")
+                           (lambda ()
+                             (interactive)
+                             (insert
+                              (ido-completing-read "Eshell history: "
+                                                   (delete-dups
+                                                    (ring-elements eshell-history-ring))))))
+            (local-set-key (kbd "C-c C-h") 'eshell-list-history)))
+(add-hook 'comint-mode-hook
+          (lambda ()
+            (if (and (and (featurep 'evil) evil-mode))
+                (define-key evil-insert-state-map (kbd "C-c h") 'comint-history-isearch-backward)
+              (define-key comint-mode-map (kbd "C-c h") 'comint-history-isearch-backward))))
 
 (defun toggle-shell-buffer (shell-buffer-name shell-command)
   (if (equal (buffer-name (current-buffer)) shell-buffer-name)
@@ -263,6 +278,14 @@ the empty string."
                                  'bookmark-history)))
       (if (string-equal "" str) default str))))
 
+(defun clear-shell ()
+   (interactive)
+   (cond ((eq major-mode 'eshell-mode)
+          (let ((eshell-buffer-maximum-lines 0))
+            (eshell-truncate-buffer)))
+         ((derived-mode-p 'comint-mode)
+          (let ((comint-buffer-maximum-size 0))
+            (comint-truncate-buffer)))))
 
 (provide 'config-base)
 ;;; config-base.el ends here ---

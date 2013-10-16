@@ -99,11 +99,12 @@ title of the post, post contents, list of categories, and date respectively."
 					 (name nil "wp_slug")
 					 (value nil ,post-permalink))
 
-                                 ;; comment out for cnblogs
-				 ;; (member nil
-				 ;;         (name nil "dateCreated")
-				 ;;         (dateTime.iso8601 nil ,post-date))
-                                 ;; comment out for cnblogs ends here
+                                 ;; changed for cnblogs
+				 (member nil
+                                         (name nil "dateCreated")
+                                         (value nil
+                                                (dateTime.iso8601 nil ,post-date)))
+                                 ;; changed for cnblogs ends here
 				 ,(when post-tags
 				    `(member nil
 					     (name nil "mt_keywords")
@@ -173,9 +174,12 @@ title of the post, post contents, list of categories, and date respectively."
                                  (member nil
 					 (name nil "wp_page_parent_id")
 					 (value nil ,post-parent))
+                                 ;; changed for cnblogs
 				 (member nil
-					 (name nil "dateCreated")
-					 (dateTime.iso8601 nil ,post-date))
+                                         (name nil "dateCreated")
+                                         (value nil
+                                                (dateTime.iso8601 nil ,post-date)))
+                                 ;; changed for cnblogs ends here
 				 ,(when post-tags
 				    `(member nil
 					     (name nil "mt_keywords")
@@ -249,9 +253,12 @@ contents, list of categories, and date respectively."
                                     (member nil
                                             (name nil "wp_page_parent_id")
                                             (value nil ,post-parent))
+                                    ;; changed for cnblogs
                                     (member nil
                                             (name nil "dateCreated")
-                                            (dateTime.iso8601 nil ,post-date))
+                                            (value nil
+                                                   (dateTime.iso8601 nil ,post-date)))
+                                    ;; changed for cnblogs ends here
                                     ,(when post-tags
                                        `(member nil
                                                 (name nil "mt_keywords")
@@ -318,9 +325,12 @@ title of the post, post contents, list of categories, and date respectively."
                                  (member nil
 					 (name nil "wp_slug")
 					 (value nil ,post-permalink))
+                                 ;; changed for cnblogs
 				 (member nil
-				 	 (name nil "dateCreated")
-				 	 (dateTime.iso8601 nil ,post-date))
+                                         (name nil "dateCreated")
+                                         (value nil
+                                                (dateTime.iso8601 nil ,post-date)))
+                                 ;; changed for cnblogs ends here
 				 ,(when post-tags
 				    `(member nil
 					     (name nil "mt_keywords")

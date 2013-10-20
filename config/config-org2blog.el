@@ -33,11 +33,15 @@
 (provide 'config-org2blog)
 
 (setq cnblogs-name "cnblogs"
+      org2blog/wp-track-posts '()
       org2blog/wp-blog-alist
       '(("cnblogs"
          :url "http://www.cnblogs.com/jerryxgh/services/metaweblog.aspx"
          :username "jerryxgh"
         )))
+(defadvice url-http-end-of-document-sentinel (before set-url-http-no-retry-t activate)
+  (with-current-buffer (process-buffer (ad-get-arg 0))
+    (setq url-http-no-retry t)))
 
 (require 'org2blog-autoloads)
 

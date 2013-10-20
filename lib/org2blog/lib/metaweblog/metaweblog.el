@@ -104,19 +104,10 @@ title of the post, post contents, list of categories, and date respectively."
                                          (name nil "dateCreated")
                                          (value nil
                                                 (dateTime.iso8601 nil ,post-date)))
+                                 (member nil
+                                         (name nil "mt_keywords")
+                                         (value nil ,(cadr post-tags)))
                                  ;; changed for cnblogs ends here
-				 ,(when post-tags
-				    `(member nil
-					     (name nil "mt_keywords")
-					     (value nil
-						    (array
-						     nil
-						     ,(append
-						       '(data nil)
-						       (mapcar
-							(lambda(f)
-							  `(value nil (string nil ,f)))
-							post-tags))))))
 				 ,(when post-categories
 				    `(member nil
 					     (name nil "categories")
@@ -370,7 +361,10 @@ which is to be returned.  Can be used with pages as well."
   "Delete an entry from the weblog system."
   (xml-rpc-method-call blog-xmlrpc
 		       "blogger.deletePost"
-                       nil
+                       ;; changed for cnblogs
+                       ;;nil
+                       ""
+                       ;; changed for cnblogs
 		       post-id
 		       user-name
 		       password

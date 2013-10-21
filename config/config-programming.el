@@ -68,6 +68,15 @@
 
 ;;; HTML/XHTML/JSP/PHP -------------------------------------------------------
 (setq nxml-child-indent 4)
+(add-to-list 'auto-mode-alist
+             (cons (concat "\\." (regexp-opt '("xml" "xsd" "sch" "rng" "xslt" "svg" "rss") t) "\\'")
+                   'nxml-mode))
+(setq magic-mode-alist
+      (cons '("<＼＼?xml " . nxml-mode)
+            magic-mode-alist))
+(fset 'xml-mode 'nxml-mode)
+(fset 'html-mode 'nxml-mode)
+
 
 ;;; JavaScript ---------------------------------------------------------------
 (autoload 'js2-mode "js2-mode" nil t)

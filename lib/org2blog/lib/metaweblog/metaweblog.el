@@ -98,15 +98,18 @@ title of the post, post contents, list of categories, and date respectively."
                                  (member nil
 					 (name nil "wp_slug")
 					 (value nil ,post-permalink))
-
                                  ;; changed for cnblogs
 				 (member nil
                                          (name nil "dateCreated")
                                          (value nil
                                                 (dateTime.iso8601 nil ,post-date)))
-                                 (member nil
-                                         (name nil "mt_keywords")
-                                         (value nil ,(cadr post-tags)))
+                                 ,(when post-tags
+                                     `(member nil
+                                             (name nil "mt_keywords")
+                                             (value nil ,(reduce (lambda (result tag)
+                                                                   (if (null tag)
+                                                                       result
+                                                                     (concat result ", " tag))) post-tags))))
                                  ;; changed for cnblogs ends here
 				 ,(when post-categories
 				    `(member nil
@@ -321,19 +324,14 @@ title of the post, post contents, list of categories, and date respectively."
                                          (name nil "dateCreated")
                                          (value nil
                                                 (dateTime.iso8601 nil ,post-date)))
-                                 ;; changed for cnblogs ends here
 				 ,(when post-tags
-				    `(member nil
-					     (name nil "mt_keywords")
-					     (value nil
-						    (array
-						     nil
-						     ,(append
-						       '(data nil)
-						       (mapcar
-							(lambda(f)
-							  `(value nil (string nil ,f)))
-							post-tags))))))
+                                     `(member nil
+                                             (name nil "mt_keywords")
+                                             (value nil ,(reduce (lambda (result tag)
+                                                                   (if (null tag)
+                                                                       result
+                                                                     (concat result ", " tag))) post-tags))))
+                                 ;; changed for cnblogs ends here
 				 ,(when post-categories
 				    `(member nil
 					     (name nil "categories")

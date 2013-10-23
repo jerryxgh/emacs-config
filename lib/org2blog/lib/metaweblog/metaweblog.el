@@ -32,7 +32,8 @@
 		       blog-id
 		       user-name
 		       password
-		       `(("name" . ,category))))
+		       `(("name" . ,category)
+                         ("parent_id" . 0))))
 
 (defun wp-get-tags (blog-xmlrpc user-name password blog-id)
   "Retrieves list of tags from the weblog system. Uses wp.getTags"
@@ -173,19 +174,14 @@ title of the post, post contents, list of categories, and date respectively."
                                          (name nil "dateCreated")
                                          (value nil
                                                 (dateTime.iso8601 nil ,post-date)))
+                                 ,(when post-tags
+                                     `(member nil
+                                             (name nil "mt_keywords")
+                                             (value nil ,(reduce (lambda (result tag)
+                                                                   (if (null tag)
+                                                                       result
+                                                                     (concat result ", " tag))) post-tags))))
                                  ;; changed for cnblogs ends here
-				 ,(when post-tags
-				    `(member nil
-					     (name nil "mt_keywords")
-					     (value nil
-						    (array
-						     nil
-						     ,(append
-						       '(data nil)
-						       (mapcar
-							(lambda(f)
-							  `(value nil (string nil ,f)))
-							post-tags))))))
 				 ,(when post-categories
 				    `(member nil
 					     (name nil "categories")
@@ -252,19 +248,14 @@ contents, list of categories, and date respectively."
                                             (name nil "dateCreated")
                                             (value nil
                                                    (dateTime.iso8601 nil ,post-date)))
-                                    ;; changed for cnblogs ends here
                                     ,(when post-tags
                                        `(member nil
                                                 (name nil "mt_keywords")
-                                                (value nil
-                                                       (array
-                                                        nil
-                                                        ,(append
-                                                          '(data nil)
-                                                          (mapcar
-                                                           (lambda(f)
-                                                             `(value nil (string nil ,f)))
-                                                           post-tags))))))
+                                                (value nil ,(reduce (lambda (result tag)
+                                                                      (if (null tag)
+                                                                          result
+                                                                        (concat result ", " tag))) post-tags))))
+                                    ;; changed for cnblogs ends here
                                     ,(when post-categories
                                        `(member nil
                                                 (name nil "categories")
@@ -295,56 +286,57 @@ title of the post, post contents, list of categories, and date respectively."
     (message post-date)
   ;;; since xml-rpc-method-call entitifies the HTML text in the post
   ;;; we've to use raw
-  (xml-rpc-xml-to-response (xml-rpc-request
-   blog-xmlrpc
-   `((methodCall
-      nil
-      (methodName nil "metaWeblog.editPost")
-      (params nil
-	      (param nil (value nil (string nil ,post-id)))
-	      (param nil (value nil (string nil ,user-name)))
-	      (param nil (value nil (string nil ,password)))
-	      (param nil (value nil
-				(struct
-				 nil
-				 (member nil
-					 (name nil "title")
-					 (value nil ,post-title))
-				 (member nil
-					 (name nil "description")
-					 (value nil ,post-description))
-				 (member nil
-					 (name nil "mt_excerpt")
-					 (value nil ,post-excerpt))
-                                 (member nil
-					 (name nil "wp_slug")
-					 (value nil ,post-permalink))
-                                 ;; changed for cnblogs
-				 (member nil
-                                         (name nil "dateCreated")
-                                         (value nil
-                                                (dateTime.iso8601 nil ,post-date)))
-				 ,(when post-tags
-                                     `(member nil
-                                             (name nil "mt_keywords")
-                                             (value nil ,(reduce (lambda (result tag)
-                                                                   (if (null tag)
-                                                                       result
-                                                                     (concat result ", " tag))) post-tags))))
-                                 ;; changed for cnblogs ends here
-				 ,(when post-categories
-				    `(member nil
-					     (name nil "categories")
-					     (value nil
-						    (array
-						     nil
-						     ,(append
-						       '(data nil)
-						       (mapcar
-							(lambda(f)
-							  `(value nil (string nil ,f)))
-							post-categories)))))))))
-	      (param nil (value nil (boolean nil ,(if publish "1" "0")))))))))))
+    (xml-rpc-xml-to-response
+     (xml-rpc-request
+      blog-xmlrpc
+      `((methodCall
+         nil
+         (methodName nil "metaWeblog.editPost")
+         (params nil
+                 (param nil (value nil (string nil ,post-id)))
+                 (param nil (value nil (string nil ,user-name)))
+                 (param nil (value nil (string nil ,password)))
+                 (param nil (value nil
+                                   (struct
+                                    nil
+                                    (member nil
+                                            (name nil "title")
+                                            (value nil ,post-title))
+                                    (member nil
+                                            (name nil "description")
+                                            (value nil ,post-description))
+                                    (member nil
+                                            (name nil "mt_excerpt")
+                                            (value nil ,post-excerpt))
+                                    (member nil
+                                            (name nil "wp_slug")
+                                            (value nil ,post-permalink))
+                                    ;; changed for cnblogs
+                                    (member nil
+                                            (name nil "dateCreated")
+                                            (value nil
+                                                   (dateTime.iso8601 nil ,post-date)))
+                                    ,(when post-tags
+                                       `(member nil
+                                                (name nil "mt_keywords")
+                                                (value nil ,(reduce (lambda (result tag)
+                                                                      (if (null tag)
+                                                                          result
+                                                                        (concat result ", " tag))) post-tags))))
+                                    ;; changed for cnblogs ends here
+                                    ,(when post-categories
+                                       `(member nil
+                                                (name nil "categories")
+                                                (value nil
+                                                       (array
+                                                        nil
+                                                        ,(append
+                                                          '(data nil)
+                                                          (mapcar
+                                                           (lambda(f)
+                                                             `(value nil (string nil ,f)))
+                                                           post-categories)))))))))
+                 (param nil (value nil (boolean nil ,(if publish "1" "0")))))))))))
 
 (defun metaweblog-get-post (blog-xmlrpc user-name password post-id)
   "Retrieves a post from the weblog. POST-ID is the id of the post

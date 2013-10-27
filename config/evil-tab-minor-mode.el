@@ -81,15 +81,13 @@
 (defun evil-tab-yas-fallback-behavior ()
   "yasnippet's yas-fallback-behavior"
   (interactive)
-  (let ((tab-command (evil-tab-get-tab-command))
-        (old-point (point)))
-    (if (functionp tab-command)
-        (funcall tab-command))
+  (let ((old-point (point)))
     (if (and (eq (point) old-point)
-             (eq (following-char) ?\))
-             (eq (following-char) ?\})
-             (eq (following-char) ?\")
-             (eq (following-char) ?\'))
+             (or (eq (following-char) ?\))
+                 (eq (following-char) ?\})
+                 (eq (following-char) ?\")
+                 (eq (following-char) ?\>)
+                 (eq (following-char) ?\')))
         (forward-char))))
 
 

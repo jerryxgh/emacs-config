@@ -424,7 +424,7 @@ data."
                                             (value nil ,file-name))
                                     (member nil
                                             (name nil "bits")
-                                            (base64 nil ,file-bits))
+                                            (value nil (base64 nil ,file-bits)))
                                     (member nil
                                             (name nil "type")
                                             (value nil ,file-type))))))))))))

@@ -26,12 +26,12 @@
       ;ac-quick-help-delay 1
       )
 
-(setq-default ac-sources (append (list 'ac-source-filename 'ac-source-yasnippet)
-                                 ac-sources))
+;;(setq-default ac-sources (append (list 'ac-source-filename 'ac-source-yasnippet) ac-sources))
 
 (add-hook 'c-mode-common-hook
           (lambda nil
-            (setq ac-sources (append (list 'ac-source-gtags 'ac-source-semantic 'ac-source-semantic-raw) ac-sources))))
+            ;;(setq ac-sources (append (list 'ac-source-gtags 'ac-source-semantic 'ac-source-semantic-raw) ac-sources))
+            (setq ac-sources (append (list 'ac-source-semantic) ac-sources))))
 
 (define-key ac-mode-map (kbd "M-/") 'auto-complete)
 (define-key ac-completing-map (kbd "<tab>") 'ac-expand)

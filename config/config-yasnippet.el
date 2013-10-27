@@ -40,11 +40,6 @@
                            (add-to-list 'yas-extra-modes 'javascript-mode)
                            (yas-minor-mode 1)
                            ))
-(add-hook 'nxhtml-mode-hook '(lambda ()
-                               (make-local-variable 'yas-extra-modes)
-                               (add-to-list 'yas-extra-modes 'html-mode)
-                               (yas-minor-mode 1)
-                               ))
 
 (require 'popup)
 ;; add some shotcuts in popup menu mode

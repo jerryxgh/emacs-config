@@ -30,7 +30,7 @@
   : (require 'org2blog-autoloads)
 
   to your dot emacs.
-
+  
 *** Dependencies
     1. org2blog depends on
        - /xml-rpc/ available at [[http://launchpad.net/xml-rpc-el][Launchpad]]

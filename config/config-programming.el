@@ -104,20 +104,6 @@
                                         (define-key paredit-mode-map (kbd "C-j") 'eval-print-last-sexp)))
 (add-hook 'scheme-mode-hook           (lambda () (paredit-mode +1)))
 
-;; hideshowvis --- 在右边显示折叠标志
-(autoload 'hideshowvis-enable "hideshowvis" "Highlight foldable regions")
-(autoload 'hideshowvis-symbols "hideshowvis")
-(autoload 'hideshowvis-minor-mode
-  "hideshowvis"
-  "Will indicate regions foldable with hideshow in the fringe."
-  'interactive)
-(dolist (hook (list 'emacs-lisp-mode-hook
-                    'c++-mode-hook
-                    'c-mode-hook
-                    'java-mode-hook))
-  (add-hook hook 'hideshowvis-enable))
-(hideshowvis-symbols)
-
 ;; sh-mode --- Shell编程
 (require 'sh-script)
 (defun execute-interpret-immediately ()

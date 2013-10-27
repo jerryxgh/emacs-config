@@ -1,6 +1,6 @@
 ;;; config-cedet-built-in.el ---
 ;; Debug
-;;(require 'semantic/java)
+(require 'semantic/java)
 ;; (require 'semantic/db-global)
 ;;(require 'semantic/analyze/refs) ; Èç¹ûÃ»ÓÐÕâÒ»¾ä, »áÓÐÏÂÃæµÄ´íÎó£º semantic-ia--fast-jump-helper: Symbol's function definition is void: semantic-analyze-tag-references
 (defadvice push-mark (around semantic-mru-bookmark activate)

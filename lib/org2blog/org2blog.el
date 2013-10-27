@@ -1097,7 +1097,7 @@ use absolute path or set org-directory")
     (if (not postid)
         (message "This buffer hasn't been posted, yet.")
       (setq url (substring url 0 -10))
-      (setq url (concat url "?p=" postid "&preview=true"))
+      (setq url (concat url "/p/" postid ".html"))
       (browse-url url))))
 
 ;;;###autoload

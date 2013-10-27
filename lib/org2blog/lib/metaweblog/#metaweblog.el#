@@ -413,7 +413,6 @@ data."
          nil
          (methodName nil "metaWeblog.newMediaObject")
          (params nil
-                 (param nil (value nil (string nil ,blog-id)))
                  (param nil (value nil (string nil ,user-name)))
                  (param nil (value nil (string nil ,password)))
                  (param nil (value nil

@@ -32,8 +32,7 @@
 
 (provide 'config-org2blog)
 
-(setq cnblogs-name "cnblogs"
-      org2blog/wp-track-posts '()
+(setq org2blog/wp-track-posts '()
       org2blog/wp-blog-alist
       '(("cnblogs"
          :url "http://www.cnblogs.com/jerryxgh/services/metaweblog.aspx"

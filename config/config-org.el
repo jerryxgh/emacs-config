@@ -1,8 +1,6 @@
 ;; config-org.el ---
 
-(require 'org-exp)
-(require 'org-install)
-(org-remember-insinuate)
+(require 'org)
 
 (set-face-foreground 'org-hide (face-background 'default))
 (setq org-directory "~/Ubuntu One/org"
@@ -14,14 +12,12 @@
       org-id-locations-file "~/.emacs.d/auto-save-list/.org-id-locations"
       org-log-done 'note
       org-startup-truncated nil
-      org-export-html-style-include-default nil
-      org-export-html-toplevel-hlevel 1
-      org-export-html-postamble nil
       )
-(add-to-list 'org-export-language-setup (list "zh" "作者" "日期" "目录" "引用"))
+;;(add-to-list 'org-export-language-setup (list "zh" "作者" "日期" "目录" "引用"))
 (define-key global-map (kbd "C-c a") 'org-agenda)
 (define-key global-map (kbd "C-c l") 'org-store-link)
 (define-key global-map (kbd "C-c c") 'org-capture)
+(define-key global-map (kbd "C-c b") 'org-iswitchb)
 
 (require 'config-org2blog)
 

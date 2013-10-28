@@ -47,7 +47,7 @@
   
   ;; Body
   (let ((map (make-sparse-keymap))
-        (tab-command (evil-tab-get-tab-command))
+        (tab-command (evil-tab-get-TAB-command))
         (is-yasnippet-on (and (featurep 'yasnippet)
                               (not (cond ((functionp yas-dont-activate)
 					  (funcall yas-dont-activate))
@@ -71,7 +71,7 @@
   :group 'evil-tab
   :require 'evil-tab-minor-mode)
 
-(defun evil-tab-get-tab-command ()
+(defun evil-tab-get-TAB-command ()
   "Get the command <tab> should be bound to according to major-mode that yasnippet is not enabled and the global-map."
   (let ((major-mode-map (symbol-value (intern-soft (concat (symbol-name major-mode) "-map")))))
     (or (and major-mode-map
@@ -79,16 +79,16 @@
         (lookup-key global-map (kbd "C-i")))))
 
 (defun evil-tab-yas-fallback-behavior ()
-  "yasnippet's yas-fallback-behavior"
+  "Return a function to be run by yasnippet's yas-fallback-behavior, normally it is indent function."
   (interactive)
-  (let ((old-point (point)))
+  (let ((tab-command (evil-tab-get-TAB-command))
+        (old-point (point)))
+    (if (functionp tab-command)
+        (funcall tab-command))
     (if (and (eq (point) old-point)
-             (or (eq (following-char) ?\))
-                 (eq (following-char) ?\})
-                 (eq (following-char) ?\")
-                 (eq (following-char) ?\>)
-                 (eq (following-char) ?\')))
+             (memq (following-char) '(?\) ?\} ?\] ?\> ?\' ?\")))
         (forward-char))))
+
 
 
 ;;; evil-tab-minor-mode.el ends here

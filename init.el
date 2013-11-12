@@ -78,17 +78,16 @@
 (defvar exclude-directories '()
   "Directory names which should be excluded from load-path.")
 (progn (if (< emacs-major-version 24)
-           (add-to-list 'exclude-directories "js2-mode-emacs24")
-           (add-to-list 'exclude-directories "ack-1.3")
-         (add-to-list 'exclude-directories "js2-mode-emacs23"))
+	   (progn (add-to-list 'exclude-directories "js2-mode-emacs24")
+		  (add-to-list 'exclude-directories "ack-1.3"))
+         (add-to-list 'exclude-directories "js2-mode-emacs23")
          (add-to-list 'exclude-directories "ack-el-emacs23"))
        (if (or (< emacs-major-version 23)
                (and (= emacs-major-version 23)
                     (<= emacs-minor-version 1)))
-         (add-to-list 'exclude-directories "ecb")
-         (setq exclude-directories (append '("ecb_patched_to_work_with_cedet_1_1"
-                                                                                  "cedet-1.1")
-                                                                                exclude-directories))))
+	   (add-to-list 'exclude-directories "ecb")
+         (setq exclude-directories (append '("ecb_patched_to_work_with_cedet_1_1" "cedet-1.1")
+					   exclude-directories))))
 
 (add-directory-to-load-path-recursively emacs-config-dir exclude-directories)
 

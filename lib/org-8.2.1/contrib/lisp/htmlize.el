@@ -1878,7 +1878,7 @@ does not name a directory, it will be used as output file name."
       ;; doesn't complain about killing a modified buffer.
       (let ((buffer-file-name file))
 	;; Set the major mode for the sake of font-lock.
-	(normal-mode)
+	(java-mode)
 	(font-lock-mode 1)
 	(unless font-lock-mode
 	  ;; In GNU Emacs (font-lock-mode 1) doesn't force font-lock,

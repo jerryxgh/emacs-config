@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2013-11-12 15:54:29 Jerry Xu>
+;; Time-stamp: <2013-11-12 17:26:34 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -67,13 +67,14 @@
                 (define-key evil-insert-state-map (kbd "C-c h") 'comint-history-isearch-backward)
               (define-key comint-mode-map (kbd "C-c h") 'comint-history-isearch-backward))))
 
-(defun toggle-shell-buffer (shell-buffer-name shell-command)
+(defun toggle-shell-buffer (shell-buffer-name shell-new-command)
   (if (equal (buffer-name (current-buffer)) shell-buffer-name)
       (goto-previous-buffer)
     (let ((shell-buffer (get-buffer shell-buffer-name)))
       (if shell-buffer
-	  (switch-to-buffer-smartly shell-buffer))
-      (shell-command))))
+	  (switch-to-buffer-smartly shell-buffer)
+        (if (functionp shell-new-command)
+            (funcall shell-new-command))))))
 
 (defun switch-to-buffer-smartly (buffer-to-switch)
   "Switch to buffer, if buffer has been shown in a window, goto that window, else act as switch-to-buffer"

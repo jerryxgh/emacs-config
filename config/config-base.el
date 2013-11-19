@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2013-11-19 09:26:34 Jerry Xu>
+;; Time-stamp: <2013-11-19 09:32:27 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -151,7 +151,7 @@ the empty string."
 (column-number-mode 1)
 (mouse-avoidance-mode 'animate) 
 (global-hl-line-mode 1) 
-(global-linum-mode 1)
+;;(global-linum-mode 1)
 (show-paren-mode 1) 
 (tooltip-mode 0) 
 (global-auto-revert-mode 1) 

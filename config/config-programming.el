@@ -119,6 +119,8 @@
       (compilation-start command t (lambda (x) "*interpretation*")))))
 (define-key sh-mode-map (kbd "<f9>") 'execute-interpret-immediately)
 
+;; graphviz-dot-mode --- dot
+(setq graphviz-dot-indent-width 4)
 
 ;; tdl-mode --- tdl programming.
 (require 'tdl-mode)

@@ -79,6 +79,10 @@
 (fset 'xml-mode 'nxml-mode)
 (fset 'html-mode 'nxml-mode)
 
+(require 'html-script)
+(autoload 'php-mode "php-mode" "PHP mode" t)
+(setq auto-mode-alist (cons '("\\.php[34]?$" . nxml-mode) auto-mode-alist))
+
 
 ;;; JavaScript ---------------------------------------------------------------
 (autoload 'js2-mode "js2-mode" nil t)
@@ -96,7 +100,7 @@
 	  (t (find-file-at-point)))))
 (define-key emacs-lisp-mode-map (kbd "<f10>") 'find-function-or-variable-or-file-at-point)
 (define-key lisp-interaction-mode-map (kbd "<f10>") 'find-function-or-variable-or-file-at-point)
-;; paredit --- 自动平衡括号
+;; paredit --- Auto balance brackets.
 (autoload 'paredit-mode "paredit"
   "Minor mode for pseudo-structurally editing Lisp code." t)
 (add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
@@ -106,7 +110,7 @@
                                         (define-key paredit-mode-map (kbd "C-j") 'eval-print-last-sexp)))
 (add-hook 'scheme-mode-hook           (lambda () (paredit-mode +1)))
 
-;; sh-mode --- Shell编程
+;; sh-mode --- Shell programming
 (require 'sh-script)
 (defun execute-interpret-immediately ()
   "Run script immediately"

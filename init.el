@@ -34,7 +34,6 @@
 ;; evil 在 Emacs 中完美模拟 Vim
 ;; -- undo-tree
 ;; session
-;; nxhtml 编辑 html php jsp 等文件
 ;; cal-china
 ;; ecb
 ;; js2-mode

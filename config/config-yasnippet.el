@@ -16,7 +16,7 @@
       yas-use-menu 'abbreviate ; menu only show the mode according to the major-mode of the current buffer
       )
 
-(defvar config-modes-defer-yasnippet (list 'js2-mode 'js-mode 'nxhtml-mode)
+(defvar config-modes-defer-yasnippet (list 'js2-mode 'js-mode)
   "A list contains major mode name, in these modes yasnippet will be turn on by major mode hook.")
 ;; 要仔细设置 yas-dont-activate 这个变量，否则 yas-minor-mode 不能启动
 (setq-default yas-dont-activate (add-to-list 'yas-dont-activate

@@ -48,7 +48,7 @@
 ;;(global-semantic-idle-breadcrumbs-mode 1)
 ;;(global-semantic-show-unmatched-syntax-mode 1)
 (global-semantic-show-parser-state-mode 1)
-(setq semanticdb-default-save-directory "~/.emacs.d/auto-save-list/.semanticdb" ;ÉèÖÃcacheÎÄ¼þµÄ±£´æÎ»ÖÃ£¬²»ÉèµÄ»°Ä¬ÈÏÊÇÔÚ±»·ÖÎöÎÄ¼þµÄÄ¿Â¼ÏÂ£¬Ã¿¸öÄ¿Â¼Ò»¸ö
+(setq semanticdb-default-save-directory "~/.emacs.d/auto-save-list/.semanticdb"
       semantic-idle-summary-function 'semantic-format-tag-summarize
       ede-project-placeholder-cache-file "~/.emacs.d/auto-save-list/ede-projects.el")
 (semanticdb-enable-gnu-global-databases 'c-mode)
@@ -82,7 +82,6 @@
                                   dir)) java-src-dirs)))
 
 
-;; ´úÂëÕÛµþ·½°¸Óë´úÂëÌø×ª
 (add-hook 'c-mode-common-hook ; other modes similarly
           (lambda ()
             (hs-minor-mode 1)
@@ -93,11 +92,10 @@
 (add-hook 'emacs-lisp-mode-hook
           (lambda () (hs-minor-mode 1)))
 
-;;; ÉèÖÃÔÚÄ³Ð©Ä£Ê½ÏÂ¹Ø±Õ semantic
 (defun config-semantic-inhibit-func ()
   "Don't run cedet in some modes."
   (cond
-   ((member major-mode '(nxhtml-mode js-mode javascript-mode html-helper-mode html-mode))
+   ((member major-mode '(js-mode javascript-mode html-helper-mode html-mode))
     ;; to disable semantic, return non-nil.
     t)
    (t nil)))

@@ -1,25 +1,34 @@
-About [![Build Status](https://travis-ci.org/mooz/js2-mode.png?branch=master)](https://travis-ci.org/mooz/js2-mode)
+Description
 ======
 
-Improved JavaScript editing mode for GNU Emacs ([description here](http://elpa.gnu.org/packages/js2-mode.html)).
+An improved JavaScript mode for GNU Emacs. Forked from <http://code.google.com/p/js2-mode/>.
 
 For some of the latest changes, see [latest user-visible changes](https://github.com/mooz/js2-mode/wiki/Latest-user-visible-changes).
 
 Installation
 ======
 
-The stable versions are hosted at [GNU ELPA](http://elpa.gnu.org/)
-(<kbd>M-x list-packages</kbd>).
+    $ git clone git://github.com/mooz/js2-mode.git
+    $ cd js2-mode
+    $ git checkout emacs23
+    $ emacs --batch -f batch-byte-compile js2-mode.el
 
-You can also install the latest development version from
-[Melpa](http://melpa.milkbox.net/#installing).
+Then put js2-mode.elc into your site-lisp directory.
 
-Emacs 22 and 23
-===============
+In your emacs config:
 
-This version requires Emacs 24. For a backward compatible version,
-check out the branch
-[emacs23](https://github.com/mooz/js2-mode/tree/emacs23).
+    (autoload 'js2-mode "js2-mode" nil t)
+    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+See <http://code.google.com/p/js2-mode/wiki/InstallationInstructions> for
+additional details.
+
+Emacs 24
+========
+
+This is the backward compatible version, for Emacs 22 and 23.
+
+For Emacs 24 and newer, the [master](https://github.com/mooz/js2-mode/tree/master) branch is recommended.
 
 Bugs
 ====

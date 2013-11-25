@@ -7,8 +7,7 @@
 ;; X-URL: http://autopair.googlecode.com
 ;; URL: http://autopair.googlecode.com
 ;; EmacsWiki: AutoPairs
-;; Version: 0.4
-;; Revision: $Rev$ ($LastChangedDate$)
+;; Version: 0.5
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -181,18 +180,28 @@
 ;; requires
 (require 'cl)
 
+(defgroup autopair nil
+  "Automagically pair braces and quotes"
+  :group 'convenience)
+
 ;; variables
-(defvar autopair-pair-criteria 'help-balance
+(defcustom autopair-pair-criteria 'help-balance
   "How to decide whether to pair opening brackets or quotes.
 
 Set this to 'always to always pair, or 'help-balance to be more
-criterious when pairing.")
+criterious when pairing."
+  :group 'autopair
+  :type '(choice (const :tag "Help balance" help-balance)
+                 (const :tag "Always pair" always)))
 
-(defvar autopair-skip-criteria 'help-balance
+(defcustom autopair-skip-criteria 'help-balance
   "How to decide whether to skip closing brackets or quotes.
 
 Set this to 'always to always skip, or 'help-balance to be more
-criterious when skipping.")
+criterious when skipping."
+  :group 'autopair
+  :type '(choice (const :tag "Help balance" help-balance)
+                 (const :tag "Always skip" always)))
 
 (defvar autopair-emulation-alist nil
   "A keymap alist for adding to `emulation-mode-map-alists'.
@@ -393,15 +402,11 @@ We want this advice to only kick in the *second* call to
 (defun autopair-set-emulation-bindings ()
   "Setup keymap MAP with keybindings based on the major-mode's
 syntax table and the local value of `autopair-extra-pairs'."
-
   (let ((map (make-sparse-keymap)))
     (define-key map [remap delete-backward-char] 'autopair-backspace)
     (define-key map [remap backward-delete-char-untabify] 'autopair-backspace)
-    (define-key map (kbd "<backspace>") 'autopair-backspace)
-    (define-key map [backspace] 'autopair-backspace)
-    (define-key map (kbd "DEL") 'autopair-backspace)
-    (define-key map [return] 'autopair-newline)
-    (define-key map (kbd "RET") 'autopair-newline)
+    (define-key map "\177" 'autopair-backspace)
+    (define-key map "\r" 'autopair-newline)
     (dotimes (char 256) ;; only searches the first 256 chars,
       ;; TODO: is this enough/toomuch/stupid?
       (unless (member char
@@ -474,7 +479,7 @@ A list of four elements is returned:
                  (cons string-or-comment-start
                        (condition-case nil
                            (scan-sexps string-or-comment-start 1)
-                         (error nil)))))
+                         (scan-error nil)))))
           ((nth 4 quick-syntax-info)
            (list (parse-partial-sexp (1+ (nth 8 quick-syntax-info)) (point))
                  :comment
@@ -547,25 +552,36 @@ A list of four elements is returned:
           (blink-matching-paren (not autopair-action)))
       (call-interactively beyond-autopair))))
 
-(defvar autopair-autowrap 'help-balance
+(defcustom autopair-autowrap 'help-balance
   "If non-nil autopair attempts to wrap the selected region.
 
 This is also done in an optimistic \"try-to-balance\" fashion.
-Set this to to 'help-balance to be more criterious when wrapping.")
+Set this to to 'help-balance to be more criterious when
+wrapping."
+  :group 'autopair
+  :type '(choice (const :tag "Do wrap" t)
+                 (const :tag "Do not wrap" nil)
+                 (const :tag "Help Balance" 'help-balance)))
 
-(defvar autopair-skip-whitespace nil
+(defcustom autopair-skip-whitespace nil
   "If non-nil also skip over whitespace when skipping closing delimiters.
 
-If set to 'chomp, this will be most useful in lisp-like languages where you want
-lots of )))))....")
+If set to 'chomp, this will be most useful in lisp-like languages
+where you want lots of )))))...."
+  :group 'autopair
+  :type 'boolean)
 
-(defvar autopair-blink (if (boundp 'blink-matching-paren)
-                           blink-matching-paren
-                         t)
-  "If non-nil autopair blinks matching delimiters.")
+(defcustom autopair-blink (if (boundp 'blink-matching-paren)
+                              blink-matching-paren
+                            t)
+  "If non-nil autopair blinks matching delimiters."
+  :group 'autopair
+  :type 'boolean)
 
-(defvar autopair-blink-delay 0.1
-  "Autopair's blink-the-delimiter delay.")
+(defcustom autopair-blink-delay 0.1
+  "Autopair's blink-the-delimiter delay."
+  :group 'autopair
+  :type 'float)
 
 (defun autopair-document-bindings (&optional fallback-keys)
   (concat
@@ -609,18 +625,18 @@ returned) and uplisting stops there."
         (while (and (> howmany 0)
                     (condition-case err
                         (progn
-                          (scan-sexps (point) (- (point-max)))
-                          (error err))
-                      (error (let ((opening (and closing
-                                                 (autopair-find-pair closing))))
-                               (setq retval (cons (fourth err)
-                                                  (point)))
-                               (or (not opening)
-                                   (eq opening (char-after (fourth err))))))))
+                          (scan-sexps (point) (- (point-max))))
+                      (scan-error
+                       (let ((opening (and closing
+                                           (autopair-find-pair closing))))
+                         (setq retval (cons (fourth err)
+                                            (point)))
+                         (or (not opening)
+                             (eq opening (char-after (fourth err))))))))
           (goto-char (scan-lists (point) 1 1))
           (decf howmany))
         retval)
-    (error nil)))
+    (scan-error nil)))
 
 ;; interactive commands and their associated predicates
 ;;
@@ -655,7 +671,7 @@ returned) and uplisting stops there."
                  (and (eq where-sym :comment)
                       (condition-case nil
                           (eq autopair-inserted (char-after (scan-sexps (1+ (point)) -1)))
-                        (error nil)))))
+                        (scan-error nil)))))
            (setq autopair-action (list 'skip-quote autopair-inserted (point))))
           (;; decides whether to pair, i.e do *not* pair the quote if...
            ;;
@@ -670,7 +686,7 @@ returned) and uplisting stops there."
              ;; inside an unterminated string started by this char
              (condition-case err
                  (progn (save-excursion (up-list)) nil)
-               (error
+               (scan-error
                 (and (fourth err) ;; fix #3
                      (autopair-in-unterminated-string-p (save-excursion
                                                           (goto-char (fourth err))
@@ -694,7 +710,7 @@ returned) and uplisting stops there."
 
 (defun autopair-in-unterminated-string-p (autopair-triplet)
   (and (eq autopair-inserted (fourth (third autopair-triplet)))
-       (condition-case nil (progn (scan-sexps (ninth (third autopair-triplet)) 1) nil) (error t))))
+       (condition-case nil (progn (scan-sexps (ninth (third autopair-triplet)) 1) nil) (scan-error t))))
 
 
 (defun autopair-insert-opening ()
@@ -770,7 +786,7 @@ by this command. Then place point after the first, indented.\n\n"
                  (progn
                    (backward-list)
                    t)
-               (error nil))))
+               (scan-error nil))))
           (t
            t))))
 
@@ -794,7 +810,7 @@ by this command. Then place point after the first, indented.\n\n"
                                  (setq prev-point (point))
                                  (forward-sexp))
                                t)
-                           (error
+                           (scan-error
                             ;; if `forward-sexp' (called byp
                             ;; `autopair-forward') returned an error.
                             ;; typically we don't want to autopair,
@@ -821,7 +837,7 @@ by this command. Then place point after the first, indented.\n\n"
                                            (eq (char-after (scan-lists (point) -1 0))
                                                autopair-inserted)
                                          (goto-char (scan-lists (point) -1 -1)))
-                                     (error t))
+                                     (scan-error t))
 
                                    (or
                                     ;; mixed () ] for input (, yes autopair
@@ -832,9 +848,15 @@ by this command. Then place point after the first, indented.\n\n"
                                     ;; hence no autopair
                                     ))
                                   (t
-                                   nil))
-                            ;; (eq (fourth err) (point-max))
-                            ))))))
+                                   nil)))
+                           ;; some mode-specific implementations of
+                           ;; `forward-sexp' throw `args-out-of-range' instead
+                           ;; of `scan-error'. Until they are persuaded to throw
+                           ;; do so, this clause behaves as though we're in the
+                           ;; too-many-openings situation.
+                           ;;
+                           (args-out-of-range
+                            t))))))
                ((eq autopair-pair-criteria 'always)
                 t)
                (t
@@ -853,7 +875,7 @@ by this command. Then place point after the first, indented.\n\n"
             (mapc #'(lambda (fn)
                       (apply fn autopair-wrap-action))
                   autopair-handle-wrap-action-fns)
-          (error (progn
+          (scan-error (progn
                    (message "[autopair] error running custom `autopair-handle-wrap-action-fns', switching autopair off")
                    (autopair-mode -1))))
       (apply #'autopair-default-handle-wrap-action autopair-wrap-action))
@@ -866,7 +888,7 @@ by this command. Then place point after the first, indented.\n\n"
             (mapc #'(lambda (fn)
                       (funcall fn (first autopair-action) (second autopair-action) (third autopair-action)))
                   autopair-handle-action-fns)
-          (error (progn
+          (scan-error (progn
                    (message "[autopair] error running custom `autopair-handle-action-fns', switching autopair off")
                    (autopair-mode -1))))
       (apply #'autopair-default-handle-action autopair-action))
@@ -1066,7 +1088,7 @@ by this command. Then place point after the first, indented.\n\n"
          (save-excursion
            (condition-case err
                (backward-sexp (point-max))
-             (error
+             (scan-error
               (goto-char (third err))))
            (search-forward (make-string 1 (autopair-find-pair autopair-inserted))
                            orig-point

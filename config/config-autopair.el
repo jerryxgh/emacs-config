@@ -34,10 +34,9 @@
 
 (require 'autopair)
 (autopair-global-mode) ;; to enable in all buffers
-;; 在 nxhtml-mumamo 模式下编辑 css 时 autopair 有问题，关闭
-(add-hook 'css-mode-hook '(lambda ()
-                            (if nxhtml-mumamo-mode
-                                (setq autopair-dont-activate t))))
+;; It has some problems in editing css
+;; (add-hook 'css-mode-hook '(lambda ()
+;;                                 (setq autopair-dont-activate t)))
 
 (add-hook 'python-mode-hook
           #'(lambda ()

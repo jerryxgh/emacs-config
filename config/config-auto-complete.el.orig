@@ -15,7 +15,11 @@
       ;ac-quick-help-delay 1
       )
 
+<<<<<<< HEAD
 (setq-default ac-sources (append (list 'ac-source-filename) ac-sources))
+=======
+(setq-default ac-sources (append (list 'ac-source-filename 'ac-source-yasnippet) ac-sources))
+>>>>>>> bafbc2866e054678b5997d50104a86f85c8c289e
 
 (add-hook 'c-mode-common-hook
           (lambda nil

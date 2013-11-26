@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2013-11-19 09:32:27 Jerry Xu>
+;; Time-stamp: <2013-11-21 10:51:43 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -7,6 +7,10 @@
 (require 'temp-buffer-browse)
 (temp-buffer-browse-mode 1)
 (setq switch-window-shortcut-style 'qwerty)
+(if (listp safe-local-variable-values)
+    (setq safe-local-variable-values
+          (append safe-local-variable-values
+                  (quote ((byte-compile-warnings not cl-functions lexical unresolved obsolete) (lexical-binding . t))))))
 (defun create-scratch-buffer nil
   "create a scratch buffer"
   (interactive)
@@ -146,7 +150,7 @@ the empty string."
        (setq dired-listing-switches "-AlX"))
       (t (setq dired-listing-switches "-AlX  --group-directories-first" 
                ))
-    )
+      )
 
 (column-number-mode 1)
 (mouse-avoidance-mode 'animate) 
@@ -279,14 +283,14 @@ the empty string."
                                  'bookmark-history)))
       (if (string-equal "" str) default str))))
 
-(defun clear-shell ()
-   (interactive)
-   (cond ((eq major-mode 'eshell-mode)
-          (let ((eshell-buffer-maximum-lines 0))
-            (eshell-truncate-buffer)))
-         ((derived-mode-p 'comint-mode)
-          (let ((comint-buffer-maximum-size 0))
-            (comint-truncate-buffer)))))
+(defun clear ()
+  (interactive)
+  (cond ((eq major-mode 'eshell-mode)
+         (let ((eshell-buffer-maximum-lines 0))
+           (eshell-truncate-buffer)))
+        ((derived-mode-p 'comint-mode)
+         (let ((comint-buffer-maximum-size 0))
+           (comint-truncate-buffer)))))
 
 (provide 'config-base)
 ;;; config-base.el ends here ---

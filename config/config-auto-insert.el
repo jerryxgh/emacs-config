@@ -46,7 +46,6 @@
         ((emacs-lisp-mode . "Emacs Lisp Template") . [auto-insert-snippet])
         ((makefile-gmake-mode . "Makefile Template") . [auto-insert-snippet])
         ((html-mode . "HTML Template") . [auto-insert-snippet])
-        ((nxhtml-mode . "HTML Template") . [auto-insert-snippet])
         ))
 
 (defun auto-insert-snippet ()

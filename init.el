@@ -2,7 +2,7 @@
 
 ;; Copyright 2012 Jerry Xu
 ;;
-;; Author: gh_xu@qq.com
+;; Author: jerryxgh@gmail.com
 ;; Version: $Id: init.el,v 0.0 2012/02/29 02:18:19 jerry Exp $
 ;; Keywords: 
 ;; X-URL: not distributed yet
@@ -25,23 +25,22 @@
 
 ;; 
 
-;; 根据不同的操作系统平台设置 --变量 system-type
-;; 根据不同的机器设置 --变量 system-name
+;; system-type: the operating system type
+;; system-name: machine name
 
-;;; 我安装的 Emacs 插件
-;; quack 在Emacs中运行scheme的工具
-;; template 模版工具
-;; evil 在 Emacs 中完美模拟 Vim
-;; -- undo-tree
-;; session
-;; nxhtml 编辑 html php jsp 等文件
-;; cal-china
-;; ecb
-;; js2-mode
-;; YASnippet
-;; auto-complete 自动补全工具
-;; Put this file into your load-path and the following into your ~/.emacs:
-;;   (require 'init)
+;;; Emacs plugins used.
+;; quack: run scheme shell in Emacs.
+;; evil: use Vim keybindings in Emacs.
+;; undo-tree: visualized editing history.
+;; cal-china: China lunar calendar.
+;; ecb: make emacs an ide.
+;; js2-mode: for writing javascript.
+;; YASnippet: Best template tool.
+;; auto-complete: just as its name implies.
+
+;;; Installtion
+;; Put this file into your load-path and add following code into your ~/.emacs:
+;;   (load "<path to this file>")
 
 ;;; Code:
 
@@ -92,12 +91,11 @@
 (add-directory-to-load-path-recursively emacs-config-dir exclude-directories)
 
 
-(require 'config-base) ;基础设置，大部分模式共享
-(require 'config-evil) ;Emacs的vim模拟
-(require 'config-org) ;记笔记工具org
-(require 'config-programming) ;编程方面的设置
-(require 'config-extra) ;平时用的比较少的插件
-(require 'config-desktop)
-                                        ;必须放在初始化文件的最后，记录上次关闭时打开的文件、buffer、变量等
+(require 'config-base) ; basic configurations
+(require 'config-evil) ; for evil
+(require 'config-org) ; for org
+(require 'config-programming) ; for programming
+(require 'config-extra) ; configuration for rarely used plugin
+(require 'config-desktop) ; this should be put in the end of all emacs configuration.
 
 ;;; init.el ends here

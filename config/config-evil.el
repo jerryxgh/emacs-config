@@ -46,8 +46,7 @@
                               (Man-mode . emacs)
                               (grep-mode . emacs)
                               (view-mode . emacs)
-                              (image-mode . emacs)
-                              (fundamental-mode . emacs))
+                              (image-mode . emacs))
       do (evil-set-initial-state mode state))
 
 

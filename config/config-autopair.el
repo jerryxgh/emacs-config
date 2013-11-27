@@ -34,9 +34,8 @@
 
 (require 'autopair)
 (autopair-global-mode) ;; to enable in all buffers
-;; It has some problems in editing css
-;; (add-hook 'css-mode-hook '(lambda ()
-;;                                 (setq autopair-dont-activate t)))
+(add-hook 'js2-mode-hook '(lambda ()
+                                (autopair-mode)))
 
 (add-hook 'python-mode-hook
           #'(lambda ()

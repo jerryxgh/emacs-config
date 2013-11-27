@@ -20,6 +20,7 @@
   "Define my own key binding in Evil"
   (define-key evil-insert-state-map (kbd "C-d") 'delete-char)
   (define-key evil-insert-state-map (kbd "C-e") 'move-end-of-line)
+  (define-key evil-insert-state-map (kbd "C-k") 'paredit-kill)
   (define-key evil-insert-state-map (kbd "C-n") 'next-line)
   (define-key evil-insert-state-map (kbd "C-p") 'previous-line)
   (define-key evil-insert-state-map (kbd "C-w") 'evil-window-map)

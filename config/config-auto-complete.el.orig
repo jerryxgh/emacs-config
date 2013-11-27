@@ -10,13 +10,16 @@
       ac-comphist-file "~/.emacs.d/auto-save-list/ac-comphist.dat"
       ac-modes (append ac-modes
                        '(mpr-mode pdu-mode tdl-mode conf-xdefaults-mode html-mode nxml-mode objc-mode jde-mode sql-mode change-log-mode text-mode makefile-gmake-mode makefile-bsdmake-mo autoconf-mode makefile-automake-mode snippet-mode eshell-mode))
-      ac-use-menu-map t)
+      ac-use-menu-map t
+      ;ac-use-quick-help nil
+      ;ac-quick-help-delay 1
+      )
 
+<<<<<<< HEAD
 (setq-default ac-sources (append (list 'ac-source-filename) ac-sources))
-
-(add-hook 'js2-mode-hook
-          (lambda ()
-            (auto-complete-mode)))
+=======
+(setq-default ac-sources (append (list 'ac-source-filename 'ac-source-yasnippet) ac-sources))
+>>>>>>> bafbc2866e054678b5997d50104a86f85c8c289e
 
 (add-hook 'c-mode-common-hook
           (lambda nil

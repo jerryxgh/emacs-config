@@ -1,0 +1,51 @@
+* evil-matchit (current version 0.0.7)
+
+Vim [[http://www.vim.org/scripts/script.php?script_id=39][matchit.vim]] by Benji Fisher ported into Emacs.
+
+#+BEGIN_SRC lisp
+(require 'evil-matchit)
+(global-evil-matchit-mode 1)
+#+END_SRC
+
+Alternatively, you can enable evil-matchit-mode along a major mode by adding `turn-on-evil-matchit-mode' to the mode hook.
+
+*This package uses Evil as its vi layer*!
+
+* Install
+evil-matchit is already uploaded to [[http://marmalade-repo.org/]]. So the best way to install it is using Emacs' package manager.
+
+* How to use evil-matchit
+Press "%" to jump inside item(s) between tags in evil-normal-mode whose command name is "evilmi-jump-items".
+
+Press ",si" to select item(s) wrapped by tags in evil-normal-mode whose command name is "evilmi-select-items".
+
+Press ",di" to delete item(s) wrapped by tags in evil-normal-mode whose command name is "evilmi-delete-items".
+
+All commands support numeric argument like "3%", "5,si" or "9,di"
+
+* Advanced set up
+** Support more major modes
+html tags are automatically supported in nxml-mode, web-mode, html-mode and nxhtml-mode.
+
+Add below line into ~/.emacs to support more major modes:
+#+BEGIN_SRC elisp
+(setq evilmi-html-major-modes '(nxml-mode web-mode html-mode nxhtml-mode php-mode jsp-mode))
+#+END_SRC
+
+** re-define keybinding
+You can define your own key bindings instead using evil-matchit default key binding.
+
+All you need to do is define function evilmi-customize-keybinding before turning on evil-mathcit-mode:
+#+BEGIN_SRC elisp
+(defun evilmi-customize-keybinding ()
+  (evil-define-key 'normal evil-matchit-mode-map
+    "%" 'evilmi-jump-items
+    ",si" 'evilmi-select-items
+    ",di" 'evilmi-delete-items
+    )
+  )
+(global-evil-matchit-mode 1)
+#+END_SRC
+
+* Contact me
+You can report bugs at [[https://github.com/redguardtoo/evil-matchit]].

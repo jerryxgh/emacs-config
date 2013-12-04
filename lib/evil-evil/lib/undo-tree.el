@@ -1,9 +1,9 @@
 ;;; undo-tree.el --- Treat undo history as a tree  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009-2012  Free Software Foundation, Inc
+;; Copyright (C) 2009-2013  Free Software Foundation, Inc
 
 ;; Author: Toby Cubitt <toby-undo-tree@dr-qubit.org>
-;; Version: 0.6.3
+;; Version: 0.6.4
 ;; Keywords: convenience, files, undo, redo, history, tree
 ;; URL: http://www.dr-qubit.org/emacs.php
 ;; Repository: http://www.dr-qubit.org/git/undo-tree.git
@@ -208,9 +208,7 @@
 ;;
 ;; Persistent undo history:
 ;;
-;; Note: Requires a recent development version of Emacs checked out out from
-;;       the Emacs bzr repository. All stable versions of Emacs currently
-;;       break this feature.
+;; Note: Requires Emacs version 24.3 or higher.
 ;;
 ;; `undo-tree-auto-save-history' (variable)
 ;;    automatically save and restore undo-tree history along with buffer
@@ -885,9 +883,11 @@ when a buffer is saved to file.
 It will automatically load undo history when a buffer is loaded
 from file, if an undo save file exists.
 
-Undo-tree history is saved to a file called
-\".<buffer-file-name>.~undo-tree\" in the same directory as the
-file itself.
+By default, undo-tree history is saved to a file called
+\".<buffer-file-name>.~undo-tree~\" in the same directory as the
+file itself. To save under a different directory, customize
+`undo-tree-history-directory-alist' (see the documentation for
+that variable for details).
 
 WARNING! `undo-tree-auto-save-history' will not work properly in
 Emacs versions prior to 24.3, so it cannot be enabled via
@@ -2594,7 +2594,7 @@ Within the undo-tree visualizer, the following keys are available:
 
   ;; if disabling `undo-tree-mode', rebuild `buffer-undo-list' from tree so
   ;; Emacs undo can work
-  (if (not undo-tree-mode)
+  (when (not undo-tree-mode)
     (undo-list-rebuild-from-tree)
     (setq buffer-undo-tree nil)))
 
@@ -2986,16 +2986,16 @@ Argument is a character, naming the register."
 
 (defun undo-tree-make-history-save-file-name (file)
   "Create the undo history file name for FILE.
-Normally this is the file's name with `.' prepended and
-`~undo-tree~' appended.
+Normally this is the file's name with \".\" prepended and
+\".~undo-tree~\" appended.
 
-A match for FILE is sought in `undo-tree-history-directory-alist';
-see the documentation of that variable.  If the directory for the
-backup doesn't exist, it is created."
+A match for FILE is sought in `undo-tree-history-directory-alist'
+\(see the documentation of that variable for details\). If the
+directory for the backup doesn't exist, it is created."
   (let* ((backup-directory-alist undo-tree-history-directory-alist)
 	 (name (make-backup-file-name-1 file)))
     (concat (file-name-directory name) "." (file-name-nondirectory name)
-	    "~undo-tree~")))
+	    ".~undo-tree~")))
 
 
 (defun undo-tree-save-history (&optional filename overwrite)

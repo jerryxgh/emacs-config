@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2013-11-21 10:51:43 Jerry Xu>
+;; Time-stamp: <2013-12-05 09:53:57 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -175,6 +175,9 @@ the empty string."
              (setq comint-input-ring-file-name "~/.emacs.d/auto-save-list/.history")
              (interactive-shell-on-exit-kill-buffer)))
 (ad-activate (defadvice python-shell (after python-shell-exit-kill-buffer)
+               "When python-shell exit,kill the buffer"
+               (interactive-shell-on-exit-kill-buffer)))
+(ad-activate (defadvice run-python (after python-shell-exit-kill-buffer)
                "When python-shell exit,kill the buffer"
                (interactive-shell-on-exit-kill-buffer)))
 (add-hook 'gdb-mode-hook 'interactive-shell-on-exit-kill-buffer)

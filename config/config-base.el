@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2013-12-05 09:53:57 Jerry Xu>
+;; Time-stamp: <2013-12-09 14:20:01 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -55,21 +55,21 @@
   (interactive)
   (toggle-shell-buffer eshell-buffer-name 'eshell)
   )
-(add-hook 'eshell-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-c h")
-                           (lambda ()
-                             (interactive)
-                             (insert
-                              (ido-completing-read "Eshell history: "
-                                                   (delete-dups
-                                                    (ring-elements eshell-history-ring))))))
-            (local-set-key (kbd "C-c C-h") 'eshell-list-history)))
-(add-hook 'comint-mode-hook
-          (lambda ()
-            (if (and (and (featurep 'evil) evil-mode))
-                (define-key evil-insert-state-map (kbd "C-c h") 'comint-history-isearch-backward)
-              (define-key comint-mode-map (kbd "C-c h") 'comint-history-isearch-backward))))
+;; (add-hook 'eshell-mode-hook
+;;           (lambda ()
+;;             (local-set-key (kbd "C-c h")
+;;                            (lambda ()
+;;                              (interactive)
+;;                              (insert
+;;                               (ido-completing-read "Eshell history: "
+;;                                                    (delete-dups
+;;                                                     (ring-elements eshell-history-ring))))))
+;;             (local-set-key (kbd "C-c C-h") 'eshell-list-history)))
+;; (add-hook 'comint-mode-hook
+;;           (lambda ()
+;;             (if (and (and (featurep 'evil) evil-mode))
+;;                 (define-key evil-insert-state-map (kbd "C-c h") 'comint-history-isearch-backward)
+;;               (define-key comint-mode-map (kbd "C-c h") 'comint-history-isearch-backward))))
 
 (defun toggle-shell-buffer (shell-buffer-name shell-new-command)
   (if (equal (buffer-name (current-buffer)) shell-buffer-name)
@@ -144,6 +144,7 @@ the empty string."
       x-select-enable-clipboard t 
       enable-recursive-minibuffers t 
       confirm-kill-emacs 'y-or-n-p 
+      ediff-window-setup-function 'ediff-setup-windows-plain
       )
 ;;(add-to-list 'Info-default-directory-list " ")
 (cond ((eq system-type 'windows-nt)
@@ -170,24 +171,25 @@ the empty string."
               indicate-empty-lines t
 	      )
 
-(add-hook 'shell-mode-hook 
-          '(lambda ()
-             (setq comint-input-ring-file-name "~/.emacs.d/auto-save-list/.history")
-             (interactive-shell-on-exit-kill-buffer)))
-(ad-activate (defadvice python-shell (after python-shell-exit-kill-buffer)
-               "When python-shell exit,kill the buffer"
-               (interactive-shell-on-exit-kill-buffer)))
-(ad-activate (defadvice run-python (after python-shell-exit-kill-buffer)
-               "When python-shell exit,kill the buffer"
-               (interactive-shell-on-exit-kill-buffer)))
-(add-hook 'gdb-mode-hook 'interactive-shell-on-exit-kill-buffer)
-(add-hook 'sql-interactive-mode-hook
-          'interactive-shell-on-exit-kill-buffer)
+;; (add-hook 'shell-mode-hook 
+;;           '(lambda ()
+;;              (setq comint-input-ring-file-name "~/.emacs.d/auto-save-list/.history")
+;;              (interactive-shell-on-exit-kill-buffer)))
+;; (ad-activate (defadvice python-shell (after python-shell-exit-kill-buffer)
+;;                "When python-shell exit,kill the buffer"
+;;                (interactive-shell-on-exit-kill-buffer)))
+;; (ad-activate (defadvice run-python (after python-shell-exit-kill-buffer)
+;;                "When python-shell exit,kill the buffer"
+;;                (interactive-shell-on-exit-kill-buffer)))
+(add-hook 'comint-mode-hook 'interactive-shell-on-exit-kill-buffer)
+;; (add-hook 'gdb-mode-hook 'interactive-shell-on-exit-kill-buffer)
+;; (add-hook 'sql-interactive-mode-hook
+;;           'interactive-shell-on-exit-kill-buffer)
 
 ;;; tramp ---     
 ;; Usage: type `C-x C-f' and then enter the filename`/user@machine:/path/to.file
 (require 'tramp)
-(with-demoted-errors (require 'tramp-sh))
+;;(with-demoted-errors (require 'tramp-sh))
 
 (delete "LC_ALL=C" tramp-remote-process-environment)
 

@@ -49,7 +49,7 @@
 ;;(global-semantic-show-unmatched-syntax-mode 1)
 (global-semantic-show-parser-state-mode 1)
 (setq semanticdb-default-save-directory "~/.emacs.d/auto-save-list/.semanticdb"
-      semantic-idle-summary-function 'semantic-format-tag-summarize
+      ;;semantic-idle-summary-function 'semantic-format-tag-summarize
       ede-project-placeholder-cache-file "~/.emacs.d/auto-save-list/ede-projects.el")
 (semanticdb-enable-gnu-global-databases 'c-mode)
 (semanticdb-enable-gnu-global-databases 'c++-mode)

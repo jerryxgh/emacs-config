@@ -56,6 +56,37 @@
 (global-semantic-stickyfunc-mode -1)
 (global-semantic-show-unmatched-syntax-mode -1)
 (global-semantic-idle-completions-mode -1)
+(global-ede-mode 1)
+(ede-cpp-root-project "Allocator"
+                :name "Allocator Project"
+                :file "/sandbox/POC/Allocator/Makefile"
+                :include-path '("/if_allocator"
+                                "/src")
+                :system-include-path '("/usr/include")
+                :spp-table '())
 
+(setq semanticdb-default-save-directory "~/.emacs.d/auto-save-list/.semanticdb"
+      ;;semantic-idle-summary-function 'semantic-format-tag-summarize
+      ede-project-placeholder-cache-file "~/.emacs.d/auto-save-list/ede-projects.el")
+
+
+(defun semantic-ia-fast-jump-back ()
+  "Jump back when use command semantic-ia-fast-jump to jump to a file."
+  (interactive)
+  (if (ring-empty-p (oref semantic-mru-bookmark-ring ring))
+      (error "Semantic Bookmark ring is currently empty"))
+  (let* ((ring (oref semantic-mru-bookmark-ring ring))
+         (alist (semantic-mrub-ring-to-assoc-list ring))
+         (first (cdr (car alist))))
+    (if (semantic-equivalent-tag-p (oref first tag) (semantic-current-tag))
+        (setq first (cdr (car (cdr alist)))))
+    (semantic-mrub-switch-tags first)))
+
+(add-hook 'c++-mode-hook (lambda ()
+			  (define-key c++-mode-map (kbd "<f12>") 'semantic-ia-fast-jump)
+			  (define-key c++-mode-map (kbd "<f11>") 'semantic-ia-fast-jump-back)))
+(add-hook 'c-mode-hook (lambda ()
+			 (define-key c-mode-map (kbd "<f12>") 'semantic-ia-fast-jump)
+			 (define-key c-mode-map (kbd "<f11>") 'semantic-ia-fast-jump-back)))
 
 ;;; config-cedet.el ends here

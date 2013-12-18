@@ -44,8 +44,8 @@
 (require 'cc-mode)
 (add-hook 'c-mode-common-hook
           '(lambda nil
-             (setq c-default-style '((java-mode . "java") (awk-mode . "awk") (other . "k&r")) ;"k&r" ;设置c、c++、java等语言的缩进格式
-		   c-basic-offset 4 ; 缩进的宽度
+             (setq c-default-style '((java-mode . "java") (awk-mode . "awk") (other . "k&r")) ;"k&r" ; set indent style of c、c++、java
+		   c-basic-offset 4 ; width of indent
                    )
 
              (local-set-key  (kbd "C-c z") 'ff-find-other-file)))

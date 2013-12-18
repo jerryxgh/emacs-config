@@ -16,18 +16,19 @@
       ecb-compile-window-temporally-enlarge 'both
       ecb-create-layout-file "~/.emacs.d/auto-save-list/.ecb-user-layouts.el"
       ecb-windows-width 30
-      ecb-fix-window-size 'width ;固定ecb窗口的宽度
-      ecb-layout-name "right1"
+      ecb-fix-window-size 'width 
+      ecb-layout-name "left8"
       ecb-tip-of-the-day nil
       ecb-tip-of-the-day-file "~/.emacs/auto-save-list/.ecb-tip-of-day.el"
-      ecb-primary-secondary-mouse-buttons 'mouse-1--mouse-2 ;改变鼠标的行为
+      ecb-primary-secondary-mouse-buttons 'mouse-1--mouse-2 
       semantic-decoration-styles (list '("semantic-decoration-on-includes" . t)
                                        '("semantic-tag-boundary" . t))
       ;;ecb-create-layout-frame-height 40
       ;;ecb-create-layout-frame-width 110
       )
-                                        ;(add-to-list 'ecb-compilation-buffer-names '("*info*"))
-                                        ;(add-to-list 'ecb-source-path  '("~/Git Repositories/Workspaces" "/root"))
+
+;;(add-to-list 'ecb-compilation-buffer-names '("*info*"))
+;;(add-to-list 'ecb-source-path  '("~/Git Repositories/Workspaces" "/root"))
 
 (add-hook 'ecb-show-ecb-windows-before-hook
           'ecb-enlarge-frame-width-before-show)

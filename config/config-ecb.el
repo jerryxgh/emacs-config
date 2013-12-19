@@ -17,7 +17,7 @@
       ecb-create-layout-file "~/.emacs.d/auto-save-list/.ecb-user-layouts.el"
       ecb-windows-width 30
       ecb-fix-window-size 'width 
-      ecb-layout-name "left8"
+      ecb-layout-name "jerry"
       ecb-tip-of-the-day nil
       ecb-tip-of-the-day-file "~/.emacs/auto-save-list/.ecb-tip-of-day.el"
       ecb-primary-secondary-mouse-buttons 'mouse-1--mouse-2 
@@ -79,6 +79,46 @@
   "Redraw layout after activation of ecb."
   (ecb-redraw-layout))
 
+(define-key ecb-mode-map (kbd "<f9>") 'ecb-toggle-ecb-windows)
+
+;; Layout jerry -----------------------------------------------------
+
+(ecb-layout-define "jerry" left
+  "This function creates the following layout:
+
+   -------------------------------------------------------
+   |              |                                      |
+   |  Directories |                                      |
+   |              |                                      |
+   |              |                                      |
+   |              |                                      |
+   |              |                                      |
+   |--------------|                                      |
+   |              |                 Edit                 |
+   |  Methods     |                                      |
+   |              |                                      |
+   |              |                                      |
+   |--------------|                                      |
+   |              |                                      |
+   |  History     |                                      |
+   |              |                                      |
+   -------------------------------------------------------
+   |                                                     |
+   |                    Compilation                      |
+   |                                                     |
+   -------------------------------------------------------
+
+If you have not set a compilation-window in `ecb-compile-window-height' then
+the layout contains no persistent compilation window and the other windows get a
+little more place. This layout works best if it is contained in
+`ecb-show-sources-in-directories-buffer'!"
+  (ecb-set-directories-buffer)
+  (ecb-split-ver 0.4)
+  (ecb-set-methods-buffer)
+  (ecb-split-ver 0.5)
+  (ecb-set-history-buffer)
+  (select-window (next-window)))
+(add-to-list 'ecb-show-sources-in-directories-buffer "jerry")
 (provide 'config-ecb)
 
 ;;; config-ecb.el ends here ---

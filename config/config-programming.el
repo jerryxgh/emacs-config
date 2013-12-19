@@ -140,5 +140,13 @@
 ;; mpr-mode --- MSC Plain Representation
 (require 'mpr-mode)
 
+;; lex-mode and bison-mode --- for flex and bison
+
+(autoload 'bison-mode "bison-mode.el")
+(add-to-list 'auto-mode-alist '("\\.y$" . bison-mode))
+
+(autoload 'flex-mode "flex-mode")
+(add-to-list 'auto-mode-alist '("\\.l$" . flex-mode))
+
 
 ;;; config-programming.el ends here

@@ -43,5 +43,6 @@
     (setq url-http-no-retry t)))
 
 (require 'org2blog-autoloads)
+(require 'htmlize)
 
 ;;; config-org2blog.el ends here

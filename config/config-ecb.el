@@ -83,25 +83,25 @@
 
 ;; Layout jerry -----------------------------------------------------
 
-(ecb-layout-define "jerry" left
+(ecb-layout-define "jerry" right
   "This function creates the following layout:
 
    -------------------------------------------------------
-   |              |                                      |
-   |  Directories |                                      |
-   |              |                                      |
-   |              |                                      |
-   |              |                                      |
-   |              |                                      |
-   |--------------|                                      |
-   |              |                 Edit                 |
-   |  Methods     |                                      |
-   |              |                                      |
-   |              |                                      |
-   |--------------|                                      |
-   |              |                                      |
-   |  History     |                                      |
-   |              |                                      |
+   |                                      |              |                 
+   |                                      |  Directories |
+   |                                      |              |
+   |                                      |              |
+   |                                      |              |
+   |                                      |              |
+   |                                      |--------------|
+   |                 Edit                 |              |
+   |                                      |  Methods     |
+   |                                      |              |
+   |                                      |              |
+   |                                      |--------------|
+   |                                      |              |
+   |                                      |  History     |
+   |                                      |              |
    -------------------------------------------------------
    |                                                     |
    |                    Compilation                      |

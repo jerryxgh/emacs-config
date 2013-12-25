@@ -46,8 +46,6 @@
           '(lambda nil
              (setq c-default-style '((java-mode . "java") (awk-mode . "awk") (other . "k&r")) ;"k&r" ; set indent style of c、c++、java
 		   c-basic-offset 4 ; width of indent
-                   )
-
              (local-set-key  (kbd "C-c z") 'ff-find-other-file)))
 
 ;;; C/C++ --------------------------------------------------------------------

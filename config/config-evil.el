@@ -23,6 +23,7 @@
   (define-key evil-insert-state-map (kbd "C-k") 'paredit-kill)
   (define-key evil-insert-state-map (kbd "C-n") 'next-line)
   (define-key evil-insert-state-map (kbd "C-p") 'previous-line)
+  (define-key evil-insert-state-map (kbd "C-t") 'transpose-chars)
   (define-key evil-insert-state-map (kbd "C-w") 'evil-window-map)
   (define-key evil-insert-state-map (kbd "C-y") 'yank)
   

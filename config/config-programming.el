@@ -73,7 +73,8 @@
                    'nxml-mode))
 (setq magic-mode-alist
       (cons '("<＼＼?xml " . nxml-mode)
-            magic-mode-alist))
+            magic-mode-alist)
+      nxml-slash-auto-complete-flag t)
 (fset 'xml-mode 'nxml-mode)
 (fset 'html-mode 'nxml-mode)
 

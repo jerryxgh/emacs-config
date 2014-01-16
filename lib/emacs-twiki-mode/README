@@ -1,0 +1,286 @@
+;;; Commentary:
+;;
+;; This package is a major mode for editing TWiki pages
+;; (http://twiki.org).  Twiki formatted pages are reformatted on
+;; import into a twiki buffer to enhance readibility and friendlier
+;; editing.  After editing, the pages are "exported" back to the twiki
+;; format.
+;; 
+;; The key benefits to twiki mode:
+;;
+;;   * Keyboard shortcuts for common operations 
+;;   * Auto-numbering of headings, numbered lists
+;;   * Better bullet list management
+;;   * orgtbl-minor mode for table editing
+;;   * table numbering
+;;   * font-lock support for syntax highlighting
+;;
+;; Typical usage:
+;;
+;;   1. In Web Browser, click edit in Twiki on the page to edit
+;;
+;;   2. Select all and copy to clipboard
+;;   
+;;   3. In emacs, twiki-import-for-edit - assuming you are not already
+;;      in a buffer in twiki-mode, this will:
+;;         * create a temp file
+;;         * create buffer visiting that file,
+;;         * set the major mode to twiki-mode
+;;         * render the buffer for "editing", making bullet/lists more readable
+;;
+;;   4. Edit as necessary
+;;
+;;   5. Export to clipboard using C-c e (twiki-export-to-clipboard)
+;;
+;;   6. Back in Web Browser, Select All, and Paste from clipboard
+;;      (replacing old text)
+;;   
+;;   7. Optionally save the file elsewhere
+;;
+;; Interesting twiki-mode keys:
+;;    C-c h      Make current line a header line (asks for level, or prefix arg)
+;;    C-c 1-6    Make a Header 1-6 line
+;;    C-c C-h    Renumber all headers using 1.4.3 notation
+;;    C-c C-r    Renumber all headers and tables
+;;    C-c C-t    Renumber all tables
+;;    C-c i      Import clipboard
+;;    C-c e      Export to clipboard, rendering bullets/lists back to 
+;;               twiki format
+;; Bullet lists:
+;;    Tab        Indent bullet list
+;;    S-Tab      Unindent bullet list
+;;
+;; Headings:
+;;    Tab        Hide/show direct subtree
+;;    S-Tab      Hide/show all subtrees
+;;
+;; Server:
+;;    C-c t p    Upload to the server for a preview
+;;    C-c t s    Save as a new revision on the server
+;;    C-c t u    Update the local copy from the latest on the server
+;;    C-c t t    Return the status of the current document
+;;    C-c t d    Diff the current buffer against the server version
+;;    
+;; When saving the buffer to a file, the format is saved as
+;; twiki-format (the buffer is rendered for export, then saved).
+;; 
+;;
+;;; INSTALLATION:
+;;
+;; Put this in your .emacs to associate "*.twiki" files with twiki-mode:
+;;
+;;   (add-to-list 'auto-mode-alist'("\\.twiki$" . twiki-mode))
+;;
+;;; COMMAND LINE TOOL:
+;;
+;; Install the command line tool 'twikish' in a location in the default path,
+;; or set `twiki-shell-cmd' to the proper location.
+;;
+;; This enables the following integrations from within emacs.  See the
+;; Server section in the section above.
+;;
+;; Additional command `twiki-open-topic' can be called to download 
+;; a topic that hasn't yet been stored locally.
+;; 
+;;   
+;;; FIREFOX ITS-ALL-TEXT ADDON INTEGRATION
+;;
+;; Firefox supports "It's All Text!", a plug-in that will allow using emacs (or
+;; any editor) to edit the contents of text areas.
+;;
+;;   1. Install the add-on from:
+;;      https://addons.mozilla.org/en-US/firefox/addon/its-all-text/
+;;
+;;   2. Setup the auto-mode-alist for ".twiki" above
+;;
+;;   3. Right-click in a text area in Firefox, select It's All Text ->
+;;      Preferences
+;;
+;;   4. Configure the editor to be "emacsclient", whereever that is on
+;;      your system
+;; 
+;;   5. Add ".twiki" to the list of file extensions.  If you put it
+;;      first, all text areas will default to .twiki when pressing the
+;;      hot key or clicking the "Edit" button
+;;
+;; Note, on Windows if you have emacs installed and you get errors
+;; about not finding the socket, you may need to specify the full path
+;; to the server socket file that is used by the emacs server you're using.  
+;; This would have to go into a ".bat" file that in turn calls emacsclient
+;; with the additional "--server-file=<>" argument, as that can't be put in
+;; the editor command in the Its-All-Text preferences.
+;;
+;; To get your server-file, try: (process-get server-process :server-file)
+;;
+;;
+;;; CUSTOMIZATION
+;;
+;; M-x customize-group twiki
+;;
+;;
+;;; AUTO-NUMBERING OF HEADINGS
+;;
+;; On import or load of a twiki file, if headings were previously
+;; numbered, the numbering and min-level will automatically be
+;; detected.  If not, the user must call 'twiki-setup-heading-numbers'
+;; to setup the minimum and maximum heading levels to be numbered.
+;; This sets the variables 'twiki-min-heading-level and
+;; twiki-max-heading-level.  All subsequent renumbering will only
+;; affecting headings between min and max inclusive.
+;;
+;; All headings are number using "1.2.3" notation, one additional level
+;; of decimal notation for each level deeper than 'twiki-min-heading level:
+;;
+;;   1. First level
+;;   1.1. Next level
+;;   1.2. Same level as above
+;;   2. Back to first level
+;;
+;;
+;;; TABLES USING ORGTBL
+;;
+;; Table editing is handled by orgtbl-mode (see Info topic of Org-mode).  Tables
+;; are added by simply inserting vertical bars as the beginning of the line, one
+;; vertical bar on each end of a row:
+;;
+;;    | *Header 1* | *Header 2* |
+;;
+;; With the cursor in a table line, the basic keys are as follows:
+;;
+;;   Tab       next cell, or if at the end of the row, advance to
+;;             next row, creating a new row if necessary
+;;
+;;   S-Tab     prev cell
+;;
+;;   Ret       move to next row in the same column, creating a row
+;;             if necessary
+;;
+;;   C-c C-c   Realign the table
+;;   
+;; Just type away in any cell.  On tab, realignment occurs,
+;; "beautifying" the table so all rows have the same columns.
+;;
+;;
+;;; COLSPAN
+;;
+;; Twiki tables support colspan by interpreting two adjacent vertical bars 
+;; as an extention of the previous column:
+;;
+;;   |  Col 1    | Col 2     |
+;;   |  Colspan 2 & 2       ||
+;;
+;; Unfortunately, orgtbl does not really do colspan and if the table
+;; is realigned (on Tab, for example), the table will be reformatted
+;; as follows:
+;;
+;;   |  Col 1         | Col 2     |
+;;   |  Colspan 2 & 2 |           |
+;;
+;; To get around this, put "<<" in the column that should be merged
+;; with the previous column.  On export, any columns that have only
+;; "<<" as the cell text will get turned back into "||" so that Twiki
+;; performs the appropriate colspan:
+;;
+;;   |  Col 1         | Col 2     |
+;;   |  Colspan 2 & 2 | <<        |
+;;
+;;
+;;; COLUMN WIDTH SPECIFIERS 
+;;
+;; It's possible to specify column-width in orgbl as follows:
+;;
+;;   | <10>     |       | <20>               |
+;;   | *Name*   | *Age* | *Address*          |
+;;   | Christo=>| 25    | 1234 Really Long=> |
+;;
+;; (See org-table for more info on how this works and editing such fields)
+;;
+;; On export, this descriptor row is put in a comment block so it's hidden
+;; from view on the page.  On import again, the row is reinstated.
+;;
+;;
+;;; AUTO-NUMBERING OF TABLES
+;;
+;; Table number simply looks for any line that matches "| *Table [0-9]+:".  The
+;; number matched is replaced with a simple sequence from the start of the file.
+;;
+;;; KNOWN ISSUES:
+;;
+;;   - Two lists that are separated by a blank line in twiki syntax get munged
+;;     together as a single list by twiki-render-for-edit
+;;
+;;; TODO:
+;;
+;;   - Handle heading / table number references on renumber
+;;
+;;   - Cell-alignment with orgtbl is different than twiki as twiki
+;;     uses amount of spaces on either side of the content to align
+;;     the cell.  orgtbl is a little smarter about numbers vs not, and
+;;     supports left or right alignment.  Unclear the best way to
+;;     combine the two.
+;;
+;;
+;;; CHANGE LOG
+;; 
+;; 2011-07-19  (chris)
+;;   - First public release
+;;
+;; 2011-07-21  (chris)
+;;   - Eliminated the question to add numbering on import, added function
+;;     "twiki-setup-heading-numbers"
+;;   - Fixed twiki-electric-space so that it does not break table lines
+;;
+;; 2011-07-22  (chris)
+;;   - Fixed bugs with renumbering and non-TOC headers containing "!!"
+;;   - Added supported for file-save to write twiki-format
+;;
+;; 2011-07-22  (chris)
+;;   - Fixed hang on export on a bullet list with an empty bullet
+;;
+;; 2011-07-22  (chris)
+;;   - Fixed a bug with list numbering of alphanumeric lists (1., A.)
+;;
+;; 2011-07-29  (chris)
+;;   - Added support for orgtbl column-descriptor row, commenting out the line
+;;     on export, reinstating it on import
+;;
+;; 2011-07-31  (chris) -- Version 1.0.0
+;;   - cleaned up the code, made a 'twiki' customozation group
+;;   - added boolean for disabling orgtbl
+;;   - fixed faces so they work for light and dark background modes
+;;
+;; 2011-09-03  (chris) -- Version 1.0.1
+;;   - fixed twiki-electric-space not to break links
+;;     of the form [[ref][title]] or [[ref]]
+;;
+;; 2012-05-14  (chris) -- Version 1.0.2
+;;   - Fixed twiki-electric-space so that it does not break headings
+;;
+;; 2012-05-19  (chris)
+;;   - Fixed handling of links so that they are not broken on save
+;;   - Added support for C-u C-c <num> to set a heading as invisible to the TOC
+;;   - Turn on outline-minor-mode and support [tab] and [S-tab] to toggle
+;;     visiblity of subtrees
+;;
+;; 2012-06-20  (chris) -- Version 1.1.0
+;;   - Better line break support when links are in a line
+;;   - Added `twiki-verbatim' [C-c v] to add <verbatim></verbatim> 
+;;     around a block
+;;
+;; 2012-08-01  (chris) -- Version 1.2
+;;   - Drop '-' as bullet marker, as this causes problems when '-' 
+;;     in a bullet line happens to end up after a line break
+;;   - Fixed logic regarding import and overwriting the buffer
+;;   - Fixed twiki-electric-space so that it does not break incomplete 
+;;     table lines (ie, regonized a table line as starting with |, but
+;;     not necessarily ending with |)
+;;   - Added support for twikish command line tool
+;; 
+;; 2012-11-05  (chris) -- Version 1.3
+;;   - Added font-lock for bumpy case links
+;;   - Fixed buffer showing modified after save
+;;   - Fixed problems with longlines-mode
+;;
+;; 2013-03-04  (chris) -- Version 1.3.1
+;;   - Fixed Git issue #1 - Emacs 24 filter-buffer-substring dropped NOPROPS arg
+;;

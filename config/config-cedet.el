@@ -59,9 +59,10 @@
 (global-ede-mode 1)
 (ede-cpp-root-project "Allocator"
                 :name "Allocator Project"
-                :file "/sandbox/POC/Allocator/Makefile"
+                :file "/sandbox/sources/POC/CDT_Workspace/Granada/install_rule.mk"
                 :include-path '("/if_allocator"
-                                "/src")
+                                "/src"
+                                "/test")
                 :system-include-path '("/usr/include")
                 :spp-table '())
 
@@ -88,5 +89,9 @@
 (add-hook 'c-mode-hook (lambda ()
 			 (define-key c-mode-map (kbd "<f12>") 'semantic-ia-fast-jump)
 			 (define-key c-mode-map (kbd "<f11>") 'semantic-ia-fast-jump-back)))
+
+(add-hook 'java-mode-hook (lambda ()
+			 (define-key java-mode-map (kbd "<f12>") 'semantic-ia-fast-jump)
+			 (define-key java-mode-map (kbd "<f11>") 'semantic-ia-fast-jump-back)))
 
 ;;; config-cedet.el ends here

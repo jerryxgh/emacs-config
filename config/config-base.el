@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2013-12-09 14:20:01 Jerry Xu>
+;; Time-stamp: <2014-01-15 09:15:14 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)

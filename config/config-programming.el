@@ -73,7 +73,8 @@
                    'nxml-mode))
 (setq magic-mode-alist
       (cons '("<＼＼?xml " . nxml-mode)
-            magic-mode-alist))
+            magic-mode-alist)
+      nxml-slash-auto-complete-flag t)
 (fset 'xml-mode 'nxml-mode)
 (fset 'html-mode 'nxml-mode)
 
@@ -139,12 +140,16 @@
 (require 'mpr-mode)
 
 ;; lex-mode and bison-mode --- for flex and bison
-
 (autoload 'bison-mode "bison-mode.el")
 (add-to-list 'auto-mode-alist '("\\.y$" . bison-mode))
 
 (autoload 'flex-mode "flex-mode")
 (add-to-list 'auto-mode-alist '("\\.l$" . flex-mode))
+
+;; twiki-mode  ---  for edit twiki pages
+(require 'twiki)
+(setq twiki-shell-cmd "twikish -p")
+(add-to-list 'auto-mode-alist'("\\.twiki$" . twiki-mode))
 
 
 ;;; config-programming.el ends here

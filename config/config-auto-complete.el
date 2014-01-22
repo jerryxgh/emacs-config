@@ -9,7 +9,7 @@
 (setq ac-auto-start 1 
       ac-comphist-file "~/.emacs.d/auto-save-list/ac-comphist.dat"
       ac-modes (append ac-modes
-                       '(graphviz-dot-mode mpr-mode pdu-mode tdl-mode conf-xdefaults-mode html-mode nxml-mode objc-mode jde-mode sql-mode change-log-mode text-mode makefile-gmake-mode makefile-bsdmake-mo autoconf-mode makefile-automake-mode snippet-mode eshell-mode))
+                       '(shell-mode graphviz-dot-mode mpr-mode pdu-mode tdl-mode conf-xdefaults-mode html-mode nxml-mode objc-mode jde-mode sql-mode change-log-mode text-mode makefile-gmake-mode makefile-bsdmake-mo autoconf-mode makefile-automake-mode snippet-mode eshell-mode))
       ac-use-menu-map t)
 
 (setq-default ac-sources (append (list 'ac-source-filename) ac-sources))

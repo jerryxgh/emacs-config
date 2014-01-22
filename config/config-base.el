@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2014-01-15 09:15:14 Jerry Xu>
+;; Time-stamp: <2014-01-22 09:14:25 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -296,6 +296,7 @@ the empty string."
         ((derived-mode-p 'comint-mode)
          (let ((comint-buffer-maximum-size 0))
            (comint-truncate-buffer)))))
+(define-key shell-mode-map (kbd "C-j") 'comint-send-input)
 
 (provide 'config-base)
 ;;; config-base.el ends here ---

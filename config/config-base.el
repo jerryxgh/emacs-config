@@ -190,11 +190,12 @@ the empty string."
 ;; Usage: type `C-x C-f' and then enter the filename`/user@machine:/path/to.file
 (require 'tramp)
 ;;(with-demoted-errors (require 'tramp-sh))
+(if (boundp 'tramp-remote-process-environment)
+  (progn
+    (delete "LC_ALL=C" tramp-remote-process-environment)
+    (add-to-list 'tramp-remote-process-environment "LANG=zh_CN.utf8" 'append)
+    (add-to-list 'tramp-remote-process-environment "LC_ALL=zh_CN.utf8" 'append)))
 
-(delete "LC_ALL=C" tramp-remote-process-environment)
-
-(add-to-list 'tramp-remote-process-environment "LANG=zh_CN.utf8" 'append)
-(add-to-list 'tramp-remote-process-environment "LC_ALL=zh_CN.utf8" 'append)
 (setq ido-enable-tramp-completion t
       tramp-persistency-file-name (expand-file-name "~/.emacs.d/auto-save-list/tramp"))
 
@@ -263,29 +264,29 @@ the empty string."
 ;; redefine function bookmark-completing-read to use ido
 (defun bookmark-completing-read (prompt &optional default)
   "Prompting with PROMPT, read a bookmark name in completion.
-PROMPT will get a \": \" stuck on the end no matter what, so you
-probably don't want to include one yourself.
-Optional second arg DEFAULT is a string to return if the user enters
-the empty string."
+  PROMPT will get a \": \" stuck on the end no matter what, so you
+  probably don't want to include one yourself.
+  Optional second arg DEFAULT is a string to return if the user enters
+  the empty string."
   (bookmark-maybe-load-default-file) ; paranoia
   (if (listp last-nonmenu-event)
-      (bookmark-menu-popup-paned-menu t prompt
-				      (if bookmark-sort-flag
-					  (sort (bookmark-all-names)
-						'string-lessp)
-					(bookmark-all-names)))
+    (bookmark-menu-popup-paned-menu t prompt
+                                    (if bookmark-sort-flag
+                                      (sort (bookmark-all-names)
+                                            'string-lessp)
+                                      (bookmark-all-names)))
     (let* ((completion-ignore-case bookmark-completion-ignore-case)
-	   (default default)
-	   (prompt (concat prompt (if default
-                                      (format " (%s): " default)
+           (default default)
+           (prompt (concat prompt (if default
+                                    (format " (%s): " default)
                                     ": ")))
-	   (str
-	    (ido-completing-read prompt
-                                 (mapcar 'car bookmark-alist)
-                                 nil
-                                 0
-                                 nil
-                                 'bookmark-history)))
+           (str
+             (ido-completing-read prompt
+                                  (mapcar 'car bookmark-alist)
+                                  nil
+                                  0
+                                  nil
+                                  'bookmark-history)))
       (if (string-equal "" str) default str))))
 
 (defun clear ()

@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2014-01-22 09:14:25 Jerry Xu>
+;; Time-stamp: <2014-01-24 09:33:56 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -165,7 +165,7 @@ the empty string."
 (tool-bar-mode 0) 
 (set-default-font "Consolas-11") 
 (set-background-color "#CCE8CF") 
-(set-fontset-font t 'unicode '("Microsoft Yahei" .  "unicode-bmp")) 
+(set-fontset-font t 'unicode '("Youyuan" .  "unicode-bmp")) 
 
 (setq-default indicate-buffer-boundaries '((top . left) (t . right))
               indicate-empty-lines t

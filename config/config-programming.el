@@ -130,7 +130,7 @@
 (require 'tdl-mode)
 
 ;; python-mode --- Python programming
-(setq python-honour-comment-indentation t)
+;; (setq python-honour-comment-indentation t)
 
 ;; pdu-mode --- Protocol Data Unit and isl programming
 (require 'pdu-mode)

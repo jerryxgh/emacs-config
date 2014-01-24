@@ -56,8 +56,8 @@
 ;; Load Evil
 (evil-mode 1)
 
-(require 'evil-tab-minor-mode)
-(evil-tab-global-mode t)
+;(require 'evil-tab-minor-mode)
+;(evil-tab-global-mode t)
 
 (provide 'config-evil)
 

@@ -32,7 +32,8 @@
 
 (provide 'config-cedet)
 
-;;Currently CEDET issues a warning “Warning: cedet-called-interactively-p called with 0 arguments, but requires 1”, which can be suppressed by adding
+;; Currently CEDET issues a warning “Warning: cedet-called-interactively-p
+;; called with 0 arguments, but requires 1”, which can be suppressed by adding
 (setq byte-compile-warnings nil)
 (require 'cedet)
 
@@ -53,18 +54,19 @@
 (semantic-load-enable-code-helpers)
 (semantic-load-enable-excessive-code-helpers)
 (semantic-load-enable-semantic-debugging-helpers)
+(global-semantic-decoration-mode -1)
 (global-semantic-stickyfunc-mode -1)
 (global-semantic-show-unmatched-syntax-mode -1)
 (global-semantic-idle-completions-mode -1)
 (global-ede-mode 1)
 (ede-cpp-root-project "Allocator"
-                :name "Allocator Project"
-                :file "/sandbox/sources/POC/CDT_Workspace/Granada_code09-Jan-14_Gavin/install_rule.mk"
-                :include-path '("/if_allocator"
-                                "/src"
-                                "/test")
-                :system-include-path '("/usr/include")
-                :spp-table '())
+                      :name "Allocator Project"
+                      :file "/sandbox/sources/POC/CDT_Workspace/Granada_code09-Jan-14_Gavin/install_rule.mk"
+                      :include-path '("/if_allocator"
+                                      "/src"
+                                      "/test")
+                      :system-include-path '("/usr/include")
+                      :spp-table '())
 
 (setq semanticdb-default-save-directory "~/.emacs.d/auto-save-list/.semanticdb"
       ;;semantic-idle-summary-function 'semantic-format-tag-summarize
@@ -83,15 +85,20 @@
         (setq first (cdr (car (cdr alist)))))
     (semantic-mrub-switch-tags first)))
 
-(add-hook 'c++-mode-hook (lambda ()
-			  (define-key c++-mode-map (kbd "<f12>") 'semantic-ia-fast-jump)
-			  (define-key c++-mode-map (kbd "<f11>") 'semantic-ia-fast-jump-back)))
-(add-hook 'c-mode-hook (lambda ()
-			 (define-key c-mode-map (kbd "<f12>") 'semantic-ia-fast-jump)
-			 (define-key c-mode-map (kbd "<f11>") 'semantic-ia-fast-jump-back)))
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (define-key c++-mode-map (kbd "<f12>") 'semantic-ia-fast-jump)
+            (define-key c++-mode-map (kbd "<f11>") 'semantic-ia-fast-jump-back)
+            ))
+(add-hook 'c-mode-hook
+          (lambda ()
+            (define-key c-mode-map (kbd "<f12>") 'semantic-ia-fast-jump)
+            (define-key c-mode-map (kbd "<f11>") 'semantic-ia-fast-jump-back)))
 
-(add-hook 'java-mode-hook (lambda ()
-			 (define-key java-mode-map (kbd "<f12>") 'semantic-ia-fast-jump)
-			 (define-key java-mode-map (kbd "<f11>") 'semantic-ia-fast-jump-back)))
+(add-hook 'java-mode-hook
+          (lambda ()
+            (define-key java-mode-map (kbd "<f12>") 'semantic-ia-fast-jump)
+            (define-key java-mode-map (kbd "<f11>")
+              'semantic-ia-fast-jump-back)))
 
 ;;; config-cedet.el ends here

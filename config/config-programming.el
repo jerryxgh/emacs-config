@@ -110,7 +110,16 @@
                                         (define-key paredit-mode-map (kbd "C-j") 'eval-print-last-sexp)))
 (add-hook 'scheme-mode-hook           (lambda () (paredit-mode +1)))
 
-;; sh-mode --- Shell programming
+
+;;; Common Lisp --------------------------------------------------------------
+;; setup load-path and autoloads
+(require 'slime-autoloads)
+
+;; Set your lisp system and, optionally, some contribs
+(setq inferior-lisp-program "/opt/sbcl/bin/sbcl")
+(setq slime-contribs '(slime-fancy))
+
+;;; sh-mode --- Shell programming
 (require 'sh-script)
 (defun execute-interpret-immediately ()
   "Run script immediately"

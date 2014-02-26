@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2014-01-26 09:17:00 Jerry Xu>
+;; Time-stamp: <2014-02-26 17:51:02 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -51,7 +51,9 @@
       (message "Don't know which buffer to go..."))))
 
 (defun toggle-eshell-buffer ()
-  "If current buffer is eshell buffer, switch to previous buffer. If current buffer is not eshell buffer, switch to eshell buffer,if that does'texists, create one and swich to it."
+  "If current buffer is eshell buffer, switch to previous buffer.
+If current buffer is not eshell buffer, switch to eshell buffer,
+if that does'texists, create one and swich to it."
   (interactive)
   (toggle-shell-buffer eshell-buffer-name 'eshell)
   )
@@ -132,7 +134,8 @@ the empty string."
       ;;gnus-init-file (concat emacs-config-dir "/config/config-gnus.el") 
       ;;abbrev-file-name "~/.emacs.d/auto-save-list/.abbrev_defs" 
       custom-file (concat emacs-config-dir "/config/config-custom.el") 
-      sql-mysql-options '("-C" "-t" "-f" "-n" "--default-character-set=utf8") ;Show output on windows in buffer
+      ;;Show output on windows in buffer
+      sql-mysql-options '("-C" "-t" "-f" "-n" "--default-character-set=utf8") 
       use-dialog-box nil 
       eshell-directory-name "~/.emacs.d/auto-save-list/.eshell" ;eshell            
       frame-title-format 
@@ -173,7 +176,8 @@ the empty string."
 
 ;; (add-hook 'shell-mode-hook 
 ;;           '(lambda ()
-;;              (setq comint-input-ring-file-name "~/.emacs.d/auto-save-list/.history")
+;;              (setq comint-input-ring-file-name
+;;                    "~/.emacs.d/auto-save-list/.history"
 ;;              (interactive-shell-on-exit-kill-buffer)))
 ;; (ad-activate (defadvice python-shell (after python-shell-exit-kill-buffer)
 ;;                "When python-shell exit,kill the buffer"
@@ -236,6 +240,12 @@ the empty string."
 
 ;;; dired-x ---
 (require 'dired-x)
+
+;;; fill-column ----------------------------------------------------------
+(setq-default fill-column 80)
+(require 'fill-column-indicator)
+(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
+(global-fci-mode 1)
 
 ;;;
 (global-set-key (kbd "C-x k") 'kill-this-buffer)

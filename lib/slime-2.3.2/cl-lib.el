@@ -326,8 +326,7 @@
 ;; 
 ;; 2012-11-30  Stefan Monnier  <monnier@iro.umontreal.ca>
 ;; 
-;; 	* cl-lib.el: Try and patch things up in case we're hiding the real
-;; 	cl-lib.
+;; 	* cl-lib.el: Try and patch things up in case we're hiding the real cl-lib.
 ;; 
 ;; 2012-11-22  Stefan Monnier  <monnier@iro.umontreal.ca>
 ;; 

@@ -32,31 +32,25 @@
 
 (provide 'config-programming)
 ;;; Programming Base ---------------------------------------------------------
-(require 'config-auto-complete) ;自动补全
-(require 'config-auto-insert) ;创建文件时自动插入模板
-(require 'config-autopair) ;自动补全括号
-(require 'config-ecb) ;ecb--集成 cedet 的各种功能
-(require 'config-yasnippet) ;模式的补全
+(require 'config-auto-complete)
+(require 'config-auto-insert)
+(require 'config-autopair)
+(require 'config-ecb)
+(require 'config-yasnippet)
+(require 'config-slime)
 (require 'ack) ; grep for programmers
-(setq-default indent-tabs-mode nil) ;缩进时不用 tab ，全部使用空格缩进(M-x tabify/untabify 将区域中的特定个数的空格替换成tab或相反)
+;;M-x tabify/untabify : replace tab to spaces
+(setq-default indent-tabs-mode nil)
 ;; cc-mode --- C like language, such as C C++ Java
 (require 'cc-mode)
 (add-hook 'c-mode-common-hook
           '(lambda nil
-             (setq c-default-style '((java-mode . "java") (awk-mode . "awk") (other . "k&r")) ;"k&r" ; set indent style of c、c++、java
+             (setq c-default-style '((java-mode . "java")
+                                     (awk-mode . "awk")
+                                     (other . "k&r")) 
 		   c-basic-offset 4) ; width of indent
              (local-set-key  (kbd "C-c z") 'ff-find-other-file)))
 
-;;; C/C++ --------------------------------------------------------------------
-;; (setq compilation-finish-functions '(lambda (buffer msg)
-;; 				      "Close compilation buffer when there is no error. This function may be called by other function, like grep, so only kill the buffer whos name is *compilation*."
-;; 				      (when (and (string-match "finished" msg)
-;;                                                  (string-equal "*compilation*"
-;;                                                                (buffer-name buffer)))
-;;                                         (kill-buffer-and-window)
-;;                                         (toggle-eshell-buffer)))
-;;       compilation-read-command nil ;运行 A-x compile 时不提示输入命令，如果想修改编译命令，可以 C-u A-x compile
-;;       )
 (defun compile-immediately ()
   "Just as its name implies, compile-immediately."
   (interactive)
@@ -68,7 +62,10 @@
 ;;; HTML/XHTML/JSP/PHP -------------------------------------------------------
 (setq nxml-child-indent 4)
 (add-to-list 'auto-mode-alist
-             (cons (concat "\\." (regexp-opt '("xml" "xsd" "sch" "rng" "xslt" "svg" "rss") t) "\\'")
+             (cons (concat
+                    "\\."
+                    (regexp-opt
+                     '("xml" "xsd" "sch" "rng" "xslt" "svg" "rss") t) "\\'")
                    'nxml-mode))
 (setq magic-mode-alist
       (cons '("<＼＼?xml " . nxml-mode)
@@ -95,29 +92,27 @@
   (interactive)
   (let ((variable (variable-at-point))
 	(function (function-called-at-point)))
-    (cond ((null (equal variable 0)) (find-function-do-it variable 'defvar 'switch-to-buffer-other-window))
-	  (function (find-function-do-it function nil 'switch-to-buffer-other-window))
+    (cond ((null (equal variable 0))
+           (find-function-do-it variable
+                                'defvar
+                                'switch-to-buffer-other-window))
+	  (function
+           (find-function-do-it function nil 'switch-to-buffer-other-window))
 	  (t (find-file-at-point)))))
-(define-key emacs-lisp-mode-map (kbd "<f10>") 'find-function-or-variable-or-file-at-point)
-(define-key lisp-interaction-mode-map (kbd "<f10>") 'find-function-or-variable-or-file-at-point)
+(define-key emacs-lisp-mode-map (kbd "<f10>")
+  'find-function-or-variable-or-file-at-point)
+(define-key lisp-interaction-mode-map (kbd "<f10>")
+  'find-function-or-variable-or-file-at-point)
 ;; paredit --- Auto balance brackets.
 (autoload 'paredit-mode "paredit"
   "Minor mode for pseudo-structurally editing Lisp code." t)
 (add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
 (add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
-(add-hook 'lisp-interaction-mode-hook (lambda ()
-                                        (paredit-mode +1)
-                                        (define-key paredit-mode-map (kbd "C-j") 'eval-print-last-sexp)))
+(add-hook 'lisp-interaction-mode-hook
+          (lambda ()
+            (paredit-mode +1)
+            (define-key paredit-mode-map (kbd "C-j") 'eval-print-last-sexp)))
 (add-hook 'scheme-mode-hook           (lambda () (paredit-mode +1)))
-
-
-;;; Common Lisp --------------------------------------------------------------
-;; setup load-path and autoloads
-(require 'slime-autoloads)
-
-;; Set your lisp system and, optionally, some contribs
-(setq inferior-lisp-program "/opt/sbcl/bin/sbcl")
-(setq slime-contribs '(slime-fancy))
 
 ;;; sh-mode --- Shell programming
 (require 'sh-script)

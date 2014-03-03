@@ -35,7 +35,7 @@
 (require 'slime-autoloads)
 
 ;; Set your lisp system and, optionally, some contribs
-(setq inferior-lisp-program "/usr/bin/sbcl")
+(setq inferior-lisp-program "/usr/bin/sbcl --noinform")
 (setq slime-contribs '(slime-fancy))
 
 

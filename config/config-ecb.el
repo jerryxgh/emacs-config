@@ -18,6 +18,7 @@
       ecb-windows-width 30
       ecb-fix-window-size 'width 
       ecb-layout-name "jerry"
+      ecb-history-make-buckets 'mode
       ecb-tip-of-the-day nil
       ecb-tip-of-the-day-file "~/.emacs/auto-save-list/.ecb-tip-of-day.el"
       ecb-primary-secondary-mouse-buttons 'mouse-1--mouse-2 
@@ -27,7 +28,7 @@
       ;;ecb-create-layout-frame-width 110
       )
 
-;;(add-to-list 'ecb-compilation-buffer-names '("*info*"))
+(add-to-list 'ecb-compilation-buffer-names '("*slime-repl sbcl*"))
 ;;(add-to-list 'ecb-source-path  '("~/Git Repositories/Workspaces" "/root"))
 
 (add-hook 'ecb-show-ecb-windows-before-hook

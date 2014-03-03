@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2014-02-26 17:51:02 Jerry Xu>
+;; Time-stamp: <2014-02-27 10:01:29 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -244,7 +244,11 @@ the empty string."
 ;;; fill-column ----------------------------------------------------------
 (setq-default fill-column 80)
 (require 'fill-column-indicator)
-(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
+(define-globalized-minor-mode
+  global-fci-mode
+  fci-mode
+  (lambda ()
+    (if () (fci-mode 1))))
 (global-fci-mode 1)
 
 ;;;

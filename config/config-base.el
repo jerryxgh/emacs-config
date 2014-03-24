@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2014-03-24 14:10:01 Jerry Xu>
+;; Time-stamp: <2014-03-24 15:06:34 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -238,6 +238,10 @@ the empty string."
 
 ;;; magit ---    Emacs        Git
 (require 'magit)
+(let ((git-executable-windows "C:/Program Files (x86)/Git/bin/git.exe"))
+  (if (and (eq system-type 'windows-nt)
+           (file-exists-p git-executable-windows))
+      (setq magit-git-executable git-executable-windows)))
 
 ;;; dired-x ---
 (require 'dired-x)
@@ -285,23 +289,23 @@ the empty string."
   the empty string."
   (bookmark-maybe-load-default-file) ; paranoia
   (if (listp last-nonmenu-event)
-    (bookmark-menu-popup-paned-menu t prompt
-                                    (if bookmark-sort-flag
-                                      (sort (bookmark-all-names)
-                                            'string-lessp)
-                                      (bookmark-all-names)))
+      (bookmark-menu-popup-paned-menu t prompt
+                                      (if bookmark-sort-flag
+                                          (sort (bookmark-all-names)
+                                                'string-lessp)
+                                        (bookmark-all-names)))
     (let* ((completion-ignore-case bookmark-completion-ignore-case)
            (default default)
            (prompt (concat prompt (if default
-                                    (format " (%s): " default)
+                                      (format " (%s): " default)
                                     ": ")))
            (str
-             (ido-completing-read prompt
-                                  (mapcar 'car bookmark-alist)
-                                  nil
-                                  0
-                                  nil
-                                  'bookmark-history)))
+            (ido-completing-read prompt
+                                 (mapcar 'car bookmark-alist)
+                                 nil
+                                 0
+                                 nil
+                                 'bookmark-history)))
       (if (string-equal "" str) default str))))
 
 (defun clear ()

@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2014-02-27 10:01:29 Jerry Xu>
+;; Time-stamp: <2014-03-24 14:10:01 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -149,6 +149,7 @@ the empty string."
       confirm-kill-emacs 'y-or-n-p 
       ediff-window-setup-function 'ediff-setup-windows-plain
       )
+(setq-default tab-width 4)
 ;;(add-to-list 'Info-default-directory-list " ")
 (cond ((eq system-type 'windows-nt)
        (setq dired-listing-switches "-AlX"))
@@ -168,7 +169,7 @@ the empty string."
 (tool-bar-mode 0) 
 (set-default-font "Consolas-11") 
 (set-background-color "#CCE8CF") 
-(set-fontset-font t 'unicode '("WenQuanYi Micro Hei" .  "unicode-bmp"))
+(set-fontset-font t 'unicode '("Microsoft Yahei" .  "unicode-bmp"))
 
 (setq-default indicate-buffer-boundaries '((top . left) (t . right))
               indicate-empty-lines t

@@ -19,6 +19,7 @@
       ecb-fix-window-size 'width 
       ecb-layout-name "jerry"
       ecb-history-make-buckets 'mode
+      ecb-kill-buffer-clears-history 'auto
       ecb-tip-of-the-day nil
       ecb-tip-of-the-day-file "~/.emacs/auto-save-list/.ecb-tip-of-day.el"
       ecb-primary-secondary-mouse-buttons 'mouse-1--mouse-2 

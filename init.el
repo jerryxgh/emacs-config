@@ -98,4 +98,9 @@
 (require 'config-extra) ; configuration for rarely used plugin
 (require 'config-desktop) ; this should be put in the end of all emacs configuration.
 
+;;; maximize the frame
+(if (eq system-type 'windows-nt)
+    (w32-send-sys-command #xf030))
+
+
 ;;; init.el ends here

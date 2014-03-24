@@ -15,9 +15,11 @@
       )
 ;;(add-to-list 'org-export-language-setup (list "zh" "作者" "日期" "目录" "引用"))
 (define-key global-map (kbd "C-c a") 'org-agenda)
-(define-key global-map (kbd "C-c l") 'org-store-link)
-(define-key global-map (kbd "C-c c") 'org-capture)
 (define-key global-map (kbd "C-c b") 'org-iswitchb)
+(define-key global-map (kbd "C-c c") 'org-capture)
+(define-key global-map (kbd "C-c l") 'org-store-link)
+
+(define-key org-mode-map (kbd "C-c d") 'org-time-stamp)
 
 (require 'config-org2blog)
 

@@ -1,6 +1,6 @@
 ;;; config-desktop.el ---
 
-;;desktop.el是一个可以保存你上次emacs关闭时的状态，下一次启动时恢复为上次关闭的状态。
+;;desktop.el
 (require 'desktop)
 (desktop-save-mode 1)
 (setq desktop-path '("~/.emacs.d/auto-save-list/")
@@ -18,6 +18,7 @@
 ;; (require 'workgroups2)
 ;; Change some settings
 ;(workgroups-mode 1)        ; put this one at the bottom of .emacs
+
 
 (provide 'config-desktop)
 ;;; config-desktop.el ends here ---

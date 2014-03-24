@@ -38,7 +38,6 @@
 (require 'config-ecb)
 (require 'config-yasnippet)
 (require 'config-slime)
-(require 'ack) ; grep for programmers
 ;;M-x tabify/untabify : replace tab to spaces
 (setq-default indent-tabs-mode nil)
 ;; cc-mode --- C like language, such as C C++ Java
@@ -77,6 +76,10 @@
 (require 'html-script)
 (autoload 'php-mode "php-mode" "PHP mode" t)
 (setq auto-mode-alist (cons '("\\.php[34]?$" . nxml-mode) auto-mode-alist))
+
+
+;;; freemarker ---------------------------------------------------------------
+(require 'config-web-mode)
 
 
 ;;; JavaScript ---------------------------------------------------------------
@@ -130,18 +133,6 @@
 ;; graphviz-dot-mode --- dot
 (setq graphviz-dot-indent-width 4)
 
-;; tdl-mode --- tdl programming.
-(require 'tdl-mode)
-
-;; python-mode --- Python programming
-;; (setq python-honour-comment-indentation t)
-
-;; pdu-mode --- Protocol Data Unit and isl programming
-(require 'pdu-mode)
-
-;; mpr-mode --- MSC Plain Representation
-(require 'mpr-mode)
-
 ;; lex-mode and bison-mode --- for flex and bison
 (autoload 'bison-mode "bison-mode.el")
 (add-to-list 'auto-mode-alist '("\\.y$" . bison-mode))
@@ -153,6 +144,10 @@
 (require 'twiki)
 (setq twiki-shell-cmd "twikish -p")
 (add-to-list 'auto-mode-alist'("\\.twiki$" . twiki-mode))
-
+;; ag.el -- front end of ag - The Silver Searcher
+(require 'ag) ; grep for programmers
+(setq ag-highlight-search t
+      ag-reuse-window t
+      ag-reuse-buffers)
 
 ;;; config-programming.el ends here

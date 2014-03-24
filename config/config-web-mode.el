@@ -1,10 +1,10 @@
-;;; pdu-mode.el --- 
+;;; config-web-mode.el --- 
 
-;; Copyright 2013 Jerry Xu
+;; Copyright 2014 Jerry Xu
 ;;
 ;; Author: Jerry Xu jerryxgh@gmail.com
 ;; Version: 0.0
-;; Keywords: pdu - Protocol Data Unit
+;; Keywords: web-mode configuration
 ;; X-URL: not distributed yet
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -26,21 +26,20 @@
 ;; 
 
 ;; Put this file into your load-path and the following into your ~/.emacs:
-;;   (require 'pdu-mode)
+;;   (require 'config-web-mode)
 
 ;;; Code:
 
-(provide 'pdu-mode)
+(provide 'config-web-mode)
 
-(define-derived-mode pdu-mode c++-mode "PDU"
-  "Major mode for TDL programming."
-  (font-lock-add-keywords 'pdu-mode
-                          '(("\\<\\(iei\\|messagetype\\|header\\|bidirectionalmessages\\|packmessages\\|unpackmessages\\|option\\|nextstate\\|state\\|start\\|in\\|out\\|to\\|with\\|length\\|case\\|export\\|import\\|use\\|include\\|package\\)\\>" . font-lock-keyword-face)
-                            ("\\<\\(byte\\|bytes\\|bit\\|bits\\|field\\|message\\|interface\\)\\>" . font-lock-type-face))))
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.ftl\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 
-(setq auto-mode-alist
-        (append
-         '(("\\.pdu\\'" . pdu-mode))
-         auto-mode-alist))
-
-;;; pdu-mode.el ends here
+;;; config-web-mode.el ends here

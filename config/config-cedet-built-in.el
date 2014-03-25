@@ -1,8 +1,9 @@
 ;;; config-cedet-built-in.el ---
+;;; -*- coding: utf-8 -*-
 ;; Debug
 (require 'semantic/java)
 ;; (require 'semantic/db-global)
-;;(require 'semantic/analyze/refs) ; Èç¹ûÃ»ÓÐÕâÒ»¾ä, »áÓÐÏÂÃæµÄ´íÎó£º semantic-ia--fast-jump-helper: Symbol's function definition is void: semantic-analyze-tag-references
+;;(require 'semantic/analyze/refs)
 (defadvice push-mark (around semantic-mru-bookmark activate)
   "Push a mark at LOCATION with NOMSG and ACTIVATE passed to `push-mark'.
  If `semantic-mru-bookmark-mode' is active, also push a tag onto
@@ -32,12 +33,12 @@
 
 ;; Enable SRecode (Template management) minor-mode.
 ;;(global-srecode-minor-mode 1)
-                                        ;(setq srecode-map-load-path (concat emacs-config-dir "/config/srecode/") ;SRecodeÄ£°åÎÄ¼þµÄ×°ÔØÂ·¾¶£¬È«¾Ö±äÁ¿
-                                        ;      srecode-map-save-file (concat emacs-config-dir "/config/srecode/srecode-map")) ;SRecodeÄ£°åÎÄ¼þµÄÓ³ÉäÎÄ¼þÂ·¾¶£¬È«¾Ö±äÁ¿
+                                        ;(setq srecode-map-load-path (concat emacs-config-dir "/config/srecode/") 
+                                        ;      srecode-map-save-file (concat emacs-config-dir "/config/srecode/srecode-map"))
 (setq semantic-default-submodes '(global-semanticdb-minor-mode
                                   global-semantic-idle-scheduler-mode
                                   ;;global-semantic-idle-summary-mode
-                                  global-semantic-decoration-mode
+                                  ;;global-semantic-decoration-mode
                                   global-semantic-highlight-func-mode
                                   ;;global-semantic-stickyfunc-mode
                                   global-semantic-mru-bookmark-mode

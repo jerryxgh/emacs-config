@@ -1,5 +1,5 @@
 ;;; config-base.el ---      
-;; Time-stamp: <2014-03-24 15:06:34 Jerry Xu>
+;; Time-stamp: <2014-03-25 10:26:38 Jerry Xu>
 
 (require 'eshell)
 (require 'ido)
@@ -194,15 +194,16 @@ the empty string."
 ;;; tramp ---     
 ;; Usage: type `C-x C-f' and then enter the filename`/user@machine:/path/to.file
 (require 'tramp)
-;;(with-demoted-errors (require 'tramp-sh))
-(if (boundp 'tramp-remote-process-environment)
-  (progn
-    (delete "LC_ALL=C" tramp-remote-process-environment)
-    (add-to-list 'tramp-remote-process-environment "LANG=zh_CN.utf8" 'append)
-    (add-to-list 'tramp-remote-process-environment "LC_ALL=zh_CN.utf8" 'append)))
+(when (> emacs-major-version 23)
+  (require 'tramp-sh)
+  (delete "LC_ALL=C" tramp-remote-process-environment)
+  (add-to-list 'tramp-remote-process-environment "LANG=zh_CN.utf8" 'append)
+  (add-to-list 'tramp-remote-process-environment "LC_ALL=zh_CN.utf8" 'append))
 
-(setq ido-enable-tramp-completion t
-      tramp-persistency-file-name (expand-file-name "~/.emacs.d/auto-save-list/tramp"))
+(setq tramp-auto-save-directory  "~/.emacs.d/auto-save-list/tramp"
+      ido-enable-tramp-completion t)
+(if (eq system-type 'windows-nt)
+    (setq tramp-default-method "plink"))
 
 ;;; ibuffer ---  
 (global-set-key (kbd "C-x C-b") 'ibuffer) 

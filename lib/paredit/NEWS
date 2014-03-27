@@ -15,10 +15,16 @@ The latest version of this file is available at
 
 ** Version 24 (beta)
 
+*** Slurp/barf now support prefix arguments with the obvious semantics.
+*** HTML quick reference is a little prettier now, perhaps.
+*** paredit.el no longer defines `backward-down-list'.
+*** Slurp `(|) foo' now yields `(|foo)', not the frustrating `(| foo)'.
 *** C-M-f/C-M-b (paredit-forward/paredit-backward) now move out of strings.
 *** Changed M-" (paredit-meta-doublequote) to not break line, like M-).
 *** New command: paredit-meta-doublequote-and-newline has old behaviour.
 *** Several commands preserve indentation and point column better.
+*** Motion commands support shift selection in GNU Emacs 24 and later.
+*** `backward-delete-char' changes in GNU Emacs 24 no longer botch paredit.
 *** Various bug fixes.
 
 ** Version 23

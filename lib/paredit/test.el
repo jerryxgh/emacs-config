@@ -2,7 +2,7 @@
 
 ;;; Rudimentary, kludgey test suite for paredit -- work in progress!
 
-;; Copyright (C) 2005--2013 Taylor R. Campbell
+;; Copyright (C) 2005--2014 Taylor R. Campbell
 
 ;; This file is part of paredit.
 ;;
@@ -42,10 +42,10 @@ Four arguments: the paredit command, the text of the buffer
           (insert before)
           (goto-char (point-min))
           (if (search-forward "_" nil t)
-              (progn (backward-delete-char +1) (set-mark (point))))
+              (progn (delete-char -1) (set-mark (point))))
           (goto-char (point-min))
           (search-forward "|")
-          (backward-delete-char +1)
+          (delete-char -1)
           (if (cond ((eq expected 'error)
                      ;++ Check that there are no more expected states.
                      (condition-case condition
@@ -170,7 +170,15 @@ Four arguments: the paredit command, the text of the buffer
                           ;; (paredit-wrap-angled ?\< ?\>)
                           )
   '(("|foo" "(|foo)")
+    ("f|oo" "f (|oo)")
+    ("fo|o" "fo (|o)")
     ("|foo bar" "(|foo) bar")
+    ("f|oo bar" "f (|oo) bar")
+    ("fo|o bar" "fo (|o) bar")
+    ("foo| bar" "foo (| bar)")
+    ("foo |bar" "foo (|bar)")
+    ("foo b|ar" "foo b (|ar)")
+    ("foo ba|r" "foo ba (|r)")
     ("|foo bar baz" "(|foo) bar baz")))
 
 (let ((transient-mark-mode t))
@@ -221,7 +229,33 @@ Four arguments: the paredit command, the text of the buffer
      "(define (square x)\n  (* |x x))")))
 
 (paredit-test 'paredit-semicolon
-  '(("#\\|(" ";|#\\(")))
+  '(("|" ";|")
+    ("|foo" ";|foo")
+    ("f|oo" "f;|oo")
+    ("fo|o" "fo;|o")
+    ("foo|" "foo;|")
+    ("|(foo bar)" ";|(foo bar)")
+    ("(|foo bar)" "(;|foo bar\n )")
+    ("(f|oo bar)" "(f;|oo bar\n )")
+    ("(fo|o bar)" "(fo;|o bar\n )")
+    ("(foo| bar)" "(foo;| bar\n )")
+    ("(foo |bar)" "(foo ;|bar\n )")
+    ("(foo b|ar)" "(foo b;|ar\n     )")
+    ("(foo ba|r)" "(foo ba;|r\n     )")
+    ("(foo bar|)" "(foo bar;|\n     )")
+    ("(foo bar)|" "(foo bar);|")
+    ("|(foo\n bar)" ";|\n(foo\n bar)")
+    ("(|foo\n bar)" "(;|foo\n bar)")
+    ("(f|oo\n bar)" "(f;|oo\n bar)")
+    ("(fo|o\n bar)" "(fo;|o\n bar)")
+    ("(foo|\n bar)" "(foo;|\n bar)")
+    ("(foo\n| bar)" "(foo\n;| bar\n )")
+    ("(foo\n |bar)" "(foo\n ;|bar\n )")
+    ("(foo\n b|ar)" "(foo\n b;|ar\n )")
+    ("(foo\n ba|r)" "(foo\n ba;|r\n )")
+    ("(foo\n bar|)" "(foo\n bar;|\n )")
+    ("(foo\n bar)|" "(foo\n bar);|")
+    ("#\\|(" ";|#\\(")))
 
 (paredit-test 'paredit-comment-dwim
   '(("\"foo|bar;baz\"    ;quux"
@@ -253,7 +287,9 @@ Four arguments: the paredit command, the text of the buffer
     ("|\\\\\\\\" "|\\\\" "|" error)
     ("\\\\|\\\\" "\\\\|" error)
     ("(|\\\\\\\\)" "(|\\\\)" "(|)" "|" error)
-    ("(\\\\|\\\\)" "(\\\\|)" "(\\\\|)")))
+    ("(\\\\|\\\\)" "(\\\\|)" "(\\\\|)")
+    ("|(" "|" error)
+    ("|)" "|" error)))
 
 (paredit-test 'paredit-backward-delete
   '(("fo|o" "f|o")
@@ -270,7 +306,9 @@ Four arguments: the paredit command, the text of the buffer
     ("\\\\\\\\|" "\\\\|" "|" error)
     ("\\\\|\\\\" "|\\\\" error)
     ("(\\\\\\\\|)" "(\\\\|)" "(|)" "|" error)
-    ("(\\\\|\\\\)" "(|\\\\)" "(|\\\\)")))
+    ("(\\\\|\\\\)" "(|\\\\)" "(|\\\\)")
+    ("(|" "|" error)
+    (")|" "|" error)))
 
 (dolist (command '(paredit-delete-region paredit-kill-region))
   ;++ Need to check whether `paredit-kill-region' updates the kill ring
@@ -1173,6 +1211,176 @@ Four arguments: the paredit command, the text of the buffer
     ;++ ("(\"|foo\\\;bar\")" error)
     ))
 
+(paredit-test 'paredit-forward-slurp-sexp
+  '(("|" error)
+    ("|()" error)
+    ;; ("(|)" error)                    ;++ Urk...
+    ("()|" error)
+    ("|() foo" error)
+    ("(|) foo" "(|foo)")
+    ("()| foo" error)
+    ("() |foo" error)
+    ("() f|oo" error)
+    ("() fo|o" error)
+    ("() foo|" error)
+    ("|(foo) bar" error)
+    ("(|foo) bar" "(|foo bar)")
+    ("(f|oo) bar" "(f|oo bar)")
+    ("(fo|o) bar" "(fo|o bar)")
+    ("(foo|) bar" "(foo| bar)")
+    ("(foo)| bar" error)
+    ("(foo) |bar" error)
+    ("(foo) b|ar" error)
+    ("(foo) ba|r" error)
+    ("(foo) bar|" error)
+    ("|\"\"" error)
+    ;; ("\"|\"" error)                  ;++ Urk...
+    ("\"\"|" error)
+    ("|\"\" foo" error)
+    ("\"|\" foo" "\"|foo\"")
+    ("\"\"| foo" error)
+    ("\"\" |foo" error)
+    ("\"\" f|oo" error)
+    ("\"\" fo|o" error)
+    ("\"\" foo|" error)
+    ("|\"foo\" bar" error)
+    ("\"|foo\" bar" "\"|foo bar\"")
+    ("\"f|oo\" bar" "\"f|oo bar\"")
+    ("\"fo|o\" bar" "\"fo|o bar\"")
+    ("\"foo|\" bar" "\"foo| bar\"")
+    ("\"foo\"| bar" error)
+    ("\"foo\" |bar" error)
+    ("\"foo\" b|ar" error)
+    ("\"foo\" ba|r" error)
+    ("\"foo\" bar|" error)
+    ("|\"\" \"\"" error)
+    ("\"|\" \"\"" "\"|\\\"\\\"\"")
+    ("\"\"| \"\"" error)
+    ("\"\" |\"\"" error)
+    ;; ("\"\" \"|\"" error)             ;++ Urk...
+    ("\"\" \"\"|" error)
+    ("|(#\\x) y" error)
+    ("(|#\\x) y" "(|#\\x y)")
+    ("(#|\\x) y" "(#|\\x y)")
+    ("(#\\|x) y" "(#\\|x y)")
+    ("(#\\x|) y" "(#\\x| y)")
+    ("(#\\x)| y" error)
+    ("(#\\x) |y" error)
+    ("(#\\x) y|" error)
+    ("|(\"x\") y" error)
+    ("(|\"x\") y" "(|\"x\" y)")
+    ("(\"|x\") y" "(\"|x\" y)" "(\"|x y\")")
+    ("(\"x|\") y" "(\"x|\" y)" "(\"x| y\")")
+    ("(\"x\"|) y" "(\"x\"| y)")
+    ("(\"x\")| y" error)
+    ("(\"x\") |y" error)
+    ("(\"x\") y|" error)))
+
+(paredit-test 'paredit-backward-slurp-sexp
+  '(("|" error)
+    ("|()" error)
+    ;; ("(|)" error)                    ;++ Urk...
+    ("()|" error)
+    ("|foo ()" error)
+    ("f|oo ()" error)
+    ("fo|o ()" error)
+    ("foo| ()" error)
+    ("foo |()" error)
+    ("foo (|)" "(foo|)")
+    ("foo ()|" error)
+    ("|foo (bar)" error)
+    ("f|oo (bar)" error)
+    ("fo|o (bar)" error)
+    ("foo| (bar)" error)
+    ("foo |(bar)" error)
+    ("foo (|bar)" "(foo |bar)")
+    ("foo (b|ar)" "(foo b|ar)")
+    ("foo (ba|r)" "(foo ba|r)")
+    ("foo (bar|)" "(foo bar|)")
+    ("foo (bar)|" error)
+    ("|\"\"" error)
+    ;; ("\"|\"" error)                  ;++ Urk...
+    ("\"\"|" error)
+    ("|foo \"\"" error)
+    ("f|oo \"\"" error)
+    ("fo|o \"\"" error)
+    ("foo| \"\"" error)
+    ("foo |\"\"" error)
+    ("foo \"|\"" "\"foo|\"")
+    ("foo \"\"|" error)
+    ("|foo \"bar\"" error)
+    ("f|oo \"bar\"" error)
+    ("fo|o \"bar\"" error)
+    ("foo| \"bar\"" error)
+    ("foo |\"bar\"" error)
+    ("foo \"|bar\"" "\"foo |bar\"")
+    ("foo \"b|ar\"" "\"foo b|ar\"")
+    ("foo \"ba|r\"" "\"foo ba|r\"")
+    ("foo \"bar|\"" "\"foo bar|\"")
+    ("foo \"bar\"|" error)
+    ("|\"\" \"\"" error)
+    ;; ("\"|\" \"\"" error)             ;++ Urk...
+    ("\"\"| \"\"" error)
+    ("\"\" |\"\"" error)
+    ("\"\" \"|\"" "\"\\\"\\\"|\"")
+    ("\"\" \"\"|" error)
+    ("|x (#\\y)" error)
+    ("x| (#\\y)" error)
+    ("x |(#\\y)" error)
+    ("x (|#\\y)" "(x |#\\y)")
+    ("x (#|\\y)" "(x #|\\y)")
+    ("x (#\\|y)" "(x #\\|y)")
+    ("x (#\\y|)" "(x #\\y|)")
+    ("x (#\\y)|" error)
+    ("|x (\"y\")" error)
+    ("x| (\"y\")" error)
+    ("x |(\"y\")" error)
+    ("x (|\"y\")" "(x |\"y\")")
+    ("x (\"|y\")" "(x \"|y\")" "(\"x |y\")")
+    ("x (\"y|\")" "(x \"y|\")" "(\"x y|\")")
+    ("x (\"y\"|)" "(x \"y\"|)")
+    ("x (\"y\")|" error)))
+
+(let ((current-prefix-arg 2))
+  (paredit-test 'paredit-forward-slurp-sexp
+    '(("(foo|) bar baz" "(foo| bar baz)")))
+  (paredit-test 'paredit-backward-slurp-sexp
+    '(("foo bar (|baz)" "(foo bar |baz)")))
+  (paredit-test 'paredit-forward-barf-sexp
+    '(("(foo| bar baz)" "(foo|) bar baz")
+      ("(foo |bar baz)" "(foo) |bar baz")))
+  (paredit-test 'paredit-backward-barf-sexp
+    '(("(foo bar| baz)" "foo bar| (baz)")
+      ("(foo bar |baz)" "foo bar (|baz)"))))
+
+(let ((current-prefix-arg -2))
+  (paredit-test 'paredit-forward-slurp-sexp
+    '(("(foo| bar baz)" "(foo|) bar baz")
+      ("(foo |bar baz)" "(foo) |bar baz")))
+  (paredit-test 'paredit-backward-slurp-sexp
+    '(("(foo bar| baz)" "foo bar| (baz)")
+      ("(foo bar |baz)" "foo bar (|baz)")))
+  (paredit-test 'paredit-forward-barf-sexp
+    '(("(foo|) bar baz" "(foo| bar baz)")))
+  (paredit-test 'paredit-backward-barf-sexp
+    '(("foo bar (|baz)" "(foo bar |baz)"))))
+
+(let ((current-prefix-arg '(4)))
+  (paredit-test 'paredit-forward-slurp-sexp
+    '(("(foo|) bar baz" "(foo| bar baz)")
+      ("(foo| bar) baz" "(foo| bar baz)")))
+  (paredit-test 'paredit-backward-slurp-sexp
+    '(("foo bar (|baz)" "(foo bar |baz)")
+      ("foo (bar |baz)" "(foo bar |baz)")))
+  (paredit-test 'paredit-forward-barf-sexp
+    '(("(foo| bar baz)" "(foo|) bar baz")
+      ("(foo |bar baz)" "(foo) |bar baz")
+      ("(foo b|ar baz)" "(foo b|ar) baz")))
+  (paredit-test 'paredit-backward-barf-sexp
+    '(("(foo ba|r baz)" "foo (ba|r baz)")
+      ("(foo bar| baz)" "foo bar| (baz)")
+      ("(foo bar |baz)" "foo bar (|baz)"))))
+
 (defun paredit-canary-indent-method (state indent-point normal-indent)
   (check-parens)
   nil)
@@ -1197,6 +1405,7 @@ Four arguments: the paredit command, the text of the buffer
     ("(let ((x 0)) (progn| ))" "(progn |(let ((x 0)) ))")
     ("(let ((x 0)) (progn|))" "(progn |(let ((x 0)) ))")
     ;; One space should definitely be left between A and B here.
+    ("(let ((x 0)) a(progn|)b)" "(progn |(let ((x 0)) a b))")
     ("(let ((x 0)) a (progn|) b)" "(progn |(let ((x 0)) a b))")
     ("(let ((x 0)) a (progn| ) b)" "(progn |(let ((x 0)) a b))")
     ("(let ((x 0)) a (progn |) b)" "(progn |(let ((x 0)) a b))")))

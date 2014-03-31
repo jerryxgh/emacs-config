@@ -95,7 +95,6 @@
 (require 'config-evil) ; for evil
 (require 'config-org) ; for org
 (require 'config-programming) ; for programming
-(require 'config-extra) ; configuration for rarely used plugin
 (require 'config-desktop) ; this should be put in the end of all emacs configuration.
 
 ;;; maximize the frame

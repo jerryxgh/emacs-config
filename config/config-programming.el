@@ -34,7 +34,7 @@
 ;;; Programming Base ---------------------------------------------------------
 (require 'config-auto-complete)
 (require 'config-auto-insert)
-(require 'config-autopair)
+;;(require 'config-autopair)
 (require 'config-ecb)
 (require 'config-yasnippet)
 (require 'config-slime)
@@ -107,15 +107,15 @@
 (define-key lisp-interaction-mode-map (kbd "<f10>")
   'find-function-or-variable-or-file-at-point)
 ;; paredit --- Auto balance brackets.
-(autoload 'paredit-mode "paredit"
-  "Minor mode for pseudo-structurally editing Lisp code." t)
-(add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
-(add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
-(add-hook 'lisp-interaction-mode-hook
-          (lambda ()
-            (paredit-mode +1)
-            (define-key paredit-mode-map (kbd "C-j") 'eval-print-last-sexp)))
-(add-hook 'scheme-mode-hook           (lambda () (paredit-mode +1)))
+;; (autoload 'paredit-mode "paredit"
+  ;;"Minor mode for pseudo-structurally editing Lisp code." t)
+;;(add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1))) (add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
+;; (add-hook 'lisp-interaction-mode-hook
+          ;; (lambda ()
+  ;;(paredit-mode +1) (define-key paredit-mode-map (kbd "C-j") 'eval-print-last-sexp)))
+;;(add-hook 'scheme-mode-hook           (lambda () (paredit-mode +1))) 
+;;; Scheme ------------------------------------------------------------------
+(require 'config-scheme)
 
 ;;; sh-mode --- Shell programming
 (require 'sh-script)

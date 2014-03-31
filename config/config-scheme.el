@@ -1,10 +1,10 @@
-;;; config-extra.el --- 
+;;; config-scheme.el --- 
 
-;; Copyright 2012 Jerry Xu
+;; Copyright 2014 Jerry Xu
 ;;
-;; Author: jerryxgh@gmail.com
-;; Version: $Id: config-extra.el,v 0.0 2012/05/31 06:22:28 XGH Exp $
-;; Keywords: 
+;; Author: Jerry Xu jerryxgh@gmail.com
+;; Version: 0.0
+;; Keywords: scheme
 ;; X-URL: not distributed yet
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -26,19 +26,29 @@
 ;; 
 
 ;; Put this file into your load-path and the following into your ~/.emacs:
-;;   (require 'config-extra)
+;;   (require 'config-scheme)
 
 ;;; Code:
 
-(provide 'config-extra)
+(provide 'config-scheme)
+
 ;;; quack --- for scheme
 (setq quack-dir "~/.emacs.d/auto-save-list/.quack"
-      quack-fontify-style nil
+      quack-fontify-style 'emacs
       quack-global-menu-p nil
       quack-default-program "guile")
 (require 'quack)
 (add-hook 'inferior-scheme-mode-hook 'interactive-shell-on-exit-kill-buffer)
 (define-key scheme-mode-map (kbd "C-x C-z") 'switch-to-scheme)
+(setq scheme-program-name "csi -:c")
+(setq scheme-mit-dialect nil)
 
-;;; config-extra.el ends here
+;; Rainbow delimiters
+(require 'rainbow-delimiters)
+(add-hook 'scheme-mode-hook 'rainbow-delimiters-mode)
 
+;; Smartparens
+(require 'smartparens-config)
+
+
+;;; config-scheme.el ends here

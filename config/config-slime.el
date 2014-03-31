@@ -4,7 +4,7 @@
 ;;
 ;; Author: Jerry Xu jerryxgh@gmail.com
 ;; Version: 0.0
-;; Keywords: Common Lisp, Slime
+;; Keywords: Lisp, Slime
 ;; X-URL: not distributed yet
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,6 @@
 
 ;; Set your lisp system and, optionally, some contribs
 (setq inferior-lisp-program "/usr/bin/sbcl --noinform")
-(setq slime-contribs '(slime-fancy))
-
+(setq slime-contribs '(slime-fancy slime-banner))
 
 ;;; config-slime.el ends here
